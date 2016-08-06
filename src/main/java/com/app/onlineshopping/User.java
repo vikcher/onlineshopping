@@ -23,6 +23,7 @@ public class User {
 	@Produces("application/json")
 	public Response retrieveSomething() {
 	   return Response.serverError().entity("UUID cannot be blank").build();
+	   //String json = "{name: vikas, age:26}";
 	   //return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 	
