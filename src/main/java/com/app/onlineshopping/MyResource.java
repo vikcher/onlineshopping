@@ -29,7 +29,7 @@ public class MyResource {
         StringBuilder ret = new StringBuilder();
         
         Statement stmt = null;
-    	String query = "select * from users";
+    	String query = "select * from d2cqj202qcsvmv.users";
     	try {
     		Connection conn = DbConn.getConnection();
 			stmt = conn.createStatement();
