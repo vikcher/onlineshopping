@@ -26,7 +26,24 @@ public class MyResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
+        StringBuilder ret = new StringBuilder();
         
-        return "HEy!";
+        Statement stmt = null;
+    	String query = "select * from users";
+    	try {
+    		Connection conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+    		ResultSet rs = stmt.executeQuery(query);
+    		while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                ret.append(id);
+                ret.append(name);
+            }
+    	} catch (Exception e)
+    	{
+    	     e.printStackTrace();
+    	}
+        return ret.toString();
     }
 }
