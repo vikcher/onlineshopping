@@ -1,9 +1,15 @@
 package com.app.onlineshopping;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.app.dbconn.DbConn;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -20,6 +26,24 @@ public class MyResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
-        return System.getenv("JDBC_DATABASE_URL");
+        StringBuilder ret = new StringBuilder();
+        
+        Statement stmt = null;
+    	String query = "select * from users";
+    	try {
+    		Connection conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+    		ResultSet rs = stmt.executeQuery(query);
+    		while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                ret.append(id);
+                ret.append(name);
+            }
+    	} catch (Exception e)
+    	{
+    	     e.printStackTrace();
+    	}
+        return ret.toString();
     }
 }
