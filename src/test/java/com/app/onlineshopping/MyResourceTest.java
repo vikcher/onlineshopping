@@ -6,9 +6,10 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
-import com.app.onlineshopping.User;
+import com.app.user.User;
+
+import static org.junit.Assert.assertEquals;
 
 public class MyResourceTest extends JerseyTest {
 
