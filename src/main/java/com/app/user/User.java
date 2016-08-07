@@ -84,12 +84,12 @@ public class User {
 			throw new NoSuchAlgorithmException();
 		}
 		
-		if (!hashedPassword.equals(retrievedPassword))
+		if (hashedPassword.equals(retrievedPassword))
 		{
 			return true;
 		}	
 		
-	    return false;	
+	    return false;
 	}
 	
 	/*

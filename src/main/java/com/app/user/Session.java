@@ -71,7 +71,7 @@ public class Session {
 			{
 				token = generateToken(uname);
 			} else {
-				User.generateJSONString("Error", "The password entered is invalid. Please try again");
+				return User.generateJSONString("Error", "The password entered is invalid. Please try again");
 			}
 		} catch (SQLException | URISyntaxException | NoSuchAlgorithmException e) {
 			return User.generateJSONString("Error", "An internal error occured");
