@@ -73,8 +73,8 @@ public class Product {
 				JSONObject newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
 				newObj.put("Category", getCategoryNameFromID(rs.getInt("category_id")));
-				newObj.put("Product name", rs.getInt("product_name"));
-				newObj.put("Product description", rs.getInt("product_description"));
+				newObj.put("Product name", rs.getString("product_name"));
+				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
