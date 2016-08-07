@@ -6,9 +6,9 @@ import javax.ws.rs.core.SecurityContext;
 
 public class UserSecurityContext implements SecurityContext {
 
-	UserAuth user;
+	UserPrincipal user;
 	
-	public UserSecurityContext(UserAuth user)
+	public UserSecurityContext(UserPrincipal user)
 	{
 		this.user = user;
 	}

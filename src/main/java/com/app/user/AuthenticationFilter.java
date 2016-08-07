@@ -38,7 +38,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 		
 		String token = authorizationHeader.substring("Bearer".length()).trim();
-		UserAuth user = null;
+		UserPrincipal user = null;
 		try {
 			user = validateToken(token);
 		} catch (SQLException | URISyntaxException e) {
@@ -57,9 +57,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     }
 	
 	
-	private UserAuth validateToken(String token) throws SQLException, URISyntaxException
+	private UserPrincipal validateToken(String token) throws SQLException, URISyntaxException
 	{
-		UserAuth authenticatedUser = null;
+		UserPrincipal authenticatedUser = null;
 	    Connection conn = null;
 	    Statement stmt = null;
 	    int count = 0;
@@ -91,7 +91,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
-				authenticatedUser = new UserAuth();
+				authenticatedUser = new UserPrincipal();
 				authenticatedUser.setID(rs.getInt("id"));
 				authenticatedUser.setUsername(rs.getString("username"));
 				authenticatedUser.setFirstName(rs.getString("first_name"));

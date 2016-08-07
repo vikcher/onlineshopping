@@ -94,7 +94,7 @@ public class Session {
 	public String userLogout(@Context SecurityContext sc) 
 	{
 		JSONObject obj;
-		UserAuth user = (UserAuth) sc.getUserPrincipal();
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int id = user.getID();
 		String name = user.getUserName();
 		Connection conn = null;

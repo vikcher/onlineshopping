@@ -3,7 +3,7 @@ package com.app.user;
 import java.security.Principal;
 
 //Security Principal for User
-public class UserAuth implements Principal {
+public class UserPrincipal implements Principal {
 
 	private String firstName, lastName, username, email;
 	private int id;
