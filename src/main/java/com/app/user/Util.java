@@ -62,18 +62,14 @@ public class Util {
 	public static String generateHash(String input) throws NoSuchAlgorithmException {
 		StringBuilder hash = new StringBuilder();
 
-		try {
-			MessageDigest sha = MessageDigest.getInstance("SHA-1");
-			byte[] hashedBytes = sha.digest(input.getBytes());
-			char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-					'a', 'b', 'c', 'd', 'e', 'f' };
-			for (int idx = 0; idx < hashedBytes.length; ++idx) {
-				byte b = hashedBytes[idx];
-				hash.append(digits[(b & 0xf0) >> 4]);
-				hash.append(digits[b & 0x0f]);
-			}
-		} catch (NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException();
+		MessageDigest sha = MessageDigest.getInstance("SHA-1");
+		byte[] hashedBytes = sha.digest(input.getBytes());
+		char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		            		'a', 'b', 'c', 'd', 'e', 'f' };
+		for (int idx = 0; idx < hashedBytes.length; ++idx) {
+			byte b = hashedBytes[idx];
+			hash.append(digits[(b & 0xf0) >> 4]);
+			hash.append(digits[b & 0x0f]);
 		}
 
 		return hash.toString();
@@ -105,6 +101,41 @@ public class Util {
 			return true;
 		}	
 	    return false;
+	}
+	
+	/*
+	 * Function to check if user exists.
+	 */
+	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
+	{
+		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
+    	ResultSet rs = executeQuery(query);
+    	while (rs.next())
+    	{
+    		/* If a user is already found, return a JSON error string*/
+    		if (rs.getInt("total") > 0)
+    		{
+    			return true;
+    		}
+    	}
+		return false;
+	}
+	
+	/*
+	 * Function to get User ID. Returns -1 if user does not exist.
+	 */
+	public static int getUserID(String uname) throws SQLException, URISyntaxException
+	{
+		int id = -1;
+		/* Retrieve User ID */
+		String query = "SELECT id from users where username = \'"+ uname +"\'";
+		ResultSet rs = executeQuery(query);
+    	while (rs.next())
+    	{
+    		id = rs.getInt("id");
+    			
+    	}
+		return id;
 	}
 
 }

@@ -28,28 +28,11 @@ public class Session {
 
 	private static String generateToken(String uname) throws SQLException, URISyntaxException
 	{
-		Connection conn = null;
-		Statement stmt = null;
 		Random random = new SecureRandom();
 	    String token = new BigInteger(130, random).toString(32);
-	    int user_id = User.getUserID(uname);
+	    int user_id = Util.getUserID(uname);
 	    String query = "INSERT INTO sessions (\"user_id\", \"token\") VALUES(" + user_id + ",\'" + token + "\')";
-		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		int ret = stmt.executeUpdate(query);
-    		if (ret != 1)
-    		{
-    			throw new SQLException();
-    		}
-		} catch (SQLException e)
-		{
-			throw new SQLException();
-		} catch (URISyntaxException e)
-		{
-			throw new URISyntaxException("", "");
-		}
-		
+    	Util.executeUpdate(query);
 		return token;
 	}
 	
@@ -66,7 +49,7 @@ public class Session {
 	{
 		String token = null;
 		try {
-			if (!User.checkIfUserExists(uname))
+			if (!Util.checkIfUserExists(uname))
 			{
 				return Util.generateJSONString("Error", "User does not exist");
 			} 
@@ -97,13 +80,9 @@ public class Session {
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int id = user.getID();
 		String name = user.getUserName();
-		Connection conn = null;
-		Statement stmt = null;
 		String query = "DELETE from sessions where user_id = " + id;
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			stmt.executeUpdate(query);
+			Util.executeUpdate(query);
 		} catch (SQLException | URISyntaxException e) {
 			obj = new JSONObject();
 			obj.put("Type", "Error");

@@ -80,8 +80,6 @@ public class Product {
 	public String getFullProductList(@DefaultValue("-1") @QueryParam("category_id") String category_id)
 	{
 		
-		Connection conn = null;
-		Statement stmt = null;
 		JSONObject ret = new JSONObject();
 		JSONArray arr = new JSONArray();
 		int count = 0;
@@ -92,9 +90,7 @@ public class Product {
 			query = "SELECT * from products where category_id = " + category_id;
 		
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = Util.executeQuery(query);
 			while (rs.next())
 			{
 				JSONObject newObj = new JSONObject();
@@ -127,16 +123,12 @@ public class Product {
 	public String getProductsByCategoryID(@PathParam("productID") String productID)
 	{
 		int id = Integer.valueOf(productID);
-		Statement stmt = null;
-		Connection conn = null;
 		JSONObject ret = new JSONObject();
 		JSONObject newObj = null;
 		int count = 0;
 		String query = "SELECT * from products where product_id = " + id;
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = Util.executeQuery(query);
 			while (rs.next())
 			{
 				newObj = new JSONObject();

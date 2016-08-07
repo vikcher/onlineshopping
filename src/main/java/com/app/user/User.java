@@ -88,16 +88,14 @@ public class User {
 		
 	    return false;
 	}
-	*/
 	
-	/*
-	 * Function to check if user exists.
-	 */
+	
+	
 	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
 		Statement stmt = null;
-		/* Find if username already exists */
+		
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
 		try {
 			conn = DbConn.getConnection();
@@ -105,7 +103,6 @@ public class User {
     		ResultSet rs = stmt.executeQuery(query);
     		while (rs.next())
     		{
-    			/* If a user is already found, return a JSON error string*/
     			if (rs.getInt("total") > 0)
     			{
     				return true;
@@ -121,15 +118,11 @@ public class User {
 		return false;
 	}
 	
-	/*
-	 * Function to get User ID. Returns -1 if user does not exist.
-	 */
 	public static int getUserID(String uname) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
 		Statement stmt = null;
 		int id = -1;
-		/* Retrieve User ID */
 		String query = "SELECT id from users where username = \'"+ uname +"\'";
 		try {
 			conn = DbConn.getConnection();
@@ -149,6 +142,7 @@ public class User {
 		
 		return id;
 	}
+	*/
 	
 	/*
 	public static String generateJSONString (String type, String message)
@@ -169,13 +163,11 @@ public class User {
 			                   @FormParam("email") String email)
 	{
 	 
-		Connection conn = null;
-		Statement stmt = null;
 		String query = null;
 		
 		/* Find if username already exists */
 		try {
-			if(checkIfUserExists(uname))
+			if(Util.checkIfUserExists(uname))
 			{
 				return Util.generateJSONString("Error", "Username \"" + uname + "\" already exists. Please choose another username");
 			}
@@ -194,13 +186,7 @@ public class User {
 		
 		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\", \"email\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\',\'" + email + "\')";
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		int ret = stmt.executeUpdate(query);
-    		if (ret != 1)
-    		{
-    			return Util.generateJSONString("Error", "Internal database error");
-    		}
+    		Util.executeUpdate(query);
 		} catch (Exception e)
 		{
 			return Util.generateJSONString("Error", "An internal error occured");
@@ -224,22 +210,18 @@ public class User {
                              @FormParam("password") String password)
 	{
 	
-		Connection conn = null;
-		Statement stmt = null;
 		/* Find if the username exists*/
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		ResultSet rs = stmt.executeQuery(query);
-    		while (rs.next())
-    		{
-    			/* If a user is already found, return a JSON error string*/
-    			if (rs.getInt("total") == 0)
-    			{
-    				return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
-    			}
-    		}
+		    ResultSet rs = Util.executeQuery(query);
+    	    while (rs.next())
+         	{
+    	    	/* If a user is already found, return a JSON error string*/
+    		    if (rs.getInt("total") == 0)
+    		    {
+    			    return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
+    		    }
+    	    }
 		} catch (Exception e) {
 	        return Util.generateJSONString ("Error", "An internal error occured");
 		}
@@ -252,7 +234,6 @@ public class User {
 		    return Util.generateJSONString("Error", "An internal error occured");	
 		}
 		
-		
 		if (!authenticated)
 		{
 			return Util.generateJSONString("Error", "The password does not match for user \"" + uname + "\". Cannot delete user");
@@ -263,13 +244,7 @@ public class User {
 		 */
 		query = "DELETE FROM users where username = \'" + uname + "\'";
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		int ret = stmt.executeUpdate(query);
-    		if (ret != 1)
-    		{
-    			return Util.generateJSONString("Error", "Internal database error");
-    		}
+			Util.executeUpdate(query);
 		} catch (Exception e)
 		{
 			return Util.generateJSONString("Error", "An internal error occured");

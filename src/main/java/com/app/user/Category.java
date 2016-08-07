@@ -22,15 +22,11 @@ public class Category {
 	@Produces("application/json")
 	public static String viewProductCategories()
 	{
-		Connection conn = null;
-		Statement stmt = null;
 		String query = "SELECT * from categories";
 		int count = 0;
 		JSONArray arr = new JSONArray();
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = Util.executeQuery(query);
 			while(rs.next())
 			{
 				JSONObject obj = new JSONObject();
