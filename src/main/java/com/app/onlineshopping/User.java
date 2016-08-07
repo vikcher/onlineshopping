@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,6 +28,7 @@ import com.app.dbconn.DbConn;
 @Path("users")
 public class User {
 	
+	public static final String SALT = "ramdom-salt-string";
 	/* 
 	 * Function to generate a Hash for a password to store in the Database
 	 */
@@ -49,6 +51,14 @@ public class User {
 
 		return hash.toString();
 	}
+	
+	private static String generateJSONString (String type, String message)
+	{
+		 JSONObject obj = new JSONObject();
+		 obj.put("Type", type);
+		 obj.put("Message", message);
+		 return obj.toJSONString();
+	}
 
 	@POST
 	@Produces("application/json")
@@ -58,11 +68,9 @@ public class User {
 			                   @FormParam("firstname") String firstName,
 			                   @FormParam("lastname") String lastName)
 	{
-	   
-		StringBuilder json = new StringBuilder();
+	 
 		Connection conn = null;
 		Statement stmt = null;
-		JSONObject obj;
 		
 		/* Find if username already exists */
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
@@ -75,28 +83,19 @@ public class User {
     			/* If a user is already found, return a JSON error string*/
     			if (rs.getInt("total") > 0)
     			{
-    				obj = new JSONObject();
-    				obj.put("Type", "Error");
-    				obj.put("Message", "Username " + uname + "already exists. Please choose another username");
-    				return obj.toJSONString();
+    				return generateJSONString("Error", "Username \"" + uname + "\" already exists. Please choose another username");
     			}
     		}
 		} catch (Exception e) {
-	        obj = new JSONObject();
-	        obj.put("Type", "Error");
-	        obj.put("Message", "An internal error occured");
-	        return obj.toJSONString();
+	        return generateJSONString ("Error", "An internal error occured");
 		}
 		
 		String hashedPassword;
 		try{
-			hashedPassword = generateHash(password);
+			hashedPassword = generateHash(SALT + password);
 		} catch (NoSuchAlgorithmException e)
 		{
-			obj = new JSONObject();
-			obj.put("Type", "error");
-			obj.put("Message", "Internal error");
-			return obj.toJSONString();
+			return generateJSONString("Error", "An internal error occured");
 		}
 		
 		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\')";
@@ -106,20 +105,95 @@ public class User {
     		int ret = stmt.executeUpdate(query);
     		if (ret != 1)
     		{
-    			obj = new JSONObject();
-    			obj.put("Type", "error");
-    			obj.put("Message", "Internal database error");
-    			return obj.toJSONString();
+    			return generateJSONString("Error", "Internal database error");
     		}
 		} catch (Exception e)
 		{
-		    obj = new JSONObject();
-		    obj.put("Type", "error");
-		    obj.put("Message", "Internal error");
-		    return obj.toJSONString();
+			return generateJSONString("Error", "An internal error occured");
 		}
 		
-		return "";
+		/* Success! Added the user to users database */
+		return generateJSONString("Success", "Successfully added user" + uname);
+	}
+	
+	/*
+	 * Method handling HTTP DELETE requests for users.
+	 * The purpose is to delete user accounts. This operation will succeed only if the correct
+	 * password is provided.
+	 * 
+	 * @return JSON with response type (error/success) and message 
+	 */
+	@DELETE
+	@Produces("application/json")
+	@Consumes("application/x-www-form-urlencoded")
+	public String deleteUser(@FormParam("username") String uname, 
+                             @FormParam("password") String password)
+	{
+	
+		Connection conn = null;
+		Statement stmt = null;
+		/* Find if the username exists*/
+		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+    		ResultSet rs = stmt.executeQuery(query);
+    		while (rs.next())
+    		{
+    			/* If a user is already found, return a JSON error string*/
+    			if (rs.getInt("total") == 0)
+    			{
+    				return generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
+    			}
+    		}
+		} catch (Exception e) {
+	        return generateJSONString ("Error", "An internal error occured");
+		}
+		
+		query = "SELECT password from users where username = \'"+ uname +"\'";
+		String retrievedPassword = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+    		ResultSet rs = stmt.executeQuery(query);
+    		while (rs.next())
+    		{
+    			retrievedPassword = rs.getString("password");
+    		}
+		} catch (Exception e) {
+	        return generateJSONString ("Error", "An internal error occured");
+		}
+		
+		String saltedPassword = SALT + password;
+		String hashedPassword;
+		try {
+			hashedPassword = generateHash(saltedPassword);
+		} catch (NoSuchAlgorithmException e) {
+			return generateJSONString ("Error", "An internal error occured");
+		}
+		
+		if (!hashedPassword.equals(retrievedPassword))
+		{
+			return generateJSONString("Error", "The password does not match for user \"" + uname + "\". Cannot delete user");
+		}
+		
+		query = "DELETE FROM users where username = \'" + uname + "\'";
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+    		int ret = stmt.executeUpdate(query);
+    		if (ret != 1)
+    		{
+    			return generateJSONString("Error", "Internal database error");
+    		}
+		} catch (Exception e)
+		{
+			return generateJSONString("Error", "An internal error occured");
+		}
+		
+		
+		/* Success! Deleted the user from users database */
+		return generateJSONString("Success", "Successfully removed user" + uname);
 	}
 	
     /**
