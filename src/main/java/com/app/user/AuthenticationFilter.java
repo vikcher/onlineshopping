@@ -38,26 +38,32 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 		
 		String token = authorizationHeader.substring("Bearer".length()).trim();
-		
-        try {
-			if (!validateToken(token))
-			{
-			    requestContext.abortWith(
-			        Response.status(Response.Status.UNAUTHORIZED).build());
-			}
+		UserAuth user = null;
+		try {
+			user = validateToken(token);
 		} catch (SQLException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			requestContext.abortWith(
+			        Response.status(Response.Status.INTERNAL_SERVER_ERROR).build());
+		}
+		
+		if (user == null)
+		{
 			requestContext.abortWith(
 			        Response.status(Response.Status.UNAUTHORIZED).build());
 		}
+		
+		requestContext.setSecurityContext(new UserSecurityContext(user));
     }
 	
 	
-	private boolean validateToken(String token) throws SQLException, URISyntaxException
+	private UserAuth validateToken(String token) throws SQLException, URISyntaxException
 	{
+		UserAuth authenticatedUser = null;
 	    Connection conn = null;
 	    Statement stmt = null;
 	    int count = 0;
-		/* Retrieve User ID */
+		/* Retrieve User ID count */
 		String query = "SELECT COUNT(*) AS total from sessions where token = \'"+ token +"\'";
 		try {
 			conn = DbConn.getConnection();
@@ -66,9 +72,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     		while (rs.next())
     		{
     			count = rs.getInt("total");
-    			if (count > 0)
+    			if (count == 0)
     			{
-    				return true;
+    				return null;
     			}
     		}
 		} catch (SQLException e) {
@@ -78,7 +84,29 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 			throw new URISyntaxException("", "");
 		}
 		
-		return false;
+		query = "SELECT * from users where id = (SELECT user_id from sessions where token = \'" + token + "\')";
+		try{
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next())
+			{
+				authenticatedUser = new UserAuth();
+				authenticatedUser.setID(rs.getInt("id"));
+				authenticatedUser.setUsername(rs.getString("username"));
+				authenticatedUser.setFirstName(rs.getString("first_name"));
+				authenticatedUser.setLastName(rs.getString("last_name"));
+				authenticatedUser.setEmail(rs.getString("email"));
+			}
+		} catch (SQLException e)
+		{
+			throw new SQLException();
+		} catch (URISyntaxException e)
+		{
+			throw new URISyntaxException("","");
+		}
+		
+		return authenticatedUser;
 	}
 
 }

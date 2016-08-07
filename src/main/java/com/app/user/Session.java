@@ -3,6 +3,7 @@ package com.app.user;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,6 +16,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import org.json.simple.JSONObject;
 
@@ -88,8 +91,24 @@ public class Session {
 	@DELETE
 	@Secured
 	@Produces("application/json")
-	public String userLogout()
+	public String userLogout(@Context SecurityContext sc) throws SQLException, URISyntaxException
 	{
+		UserAuth user = (UserAuth) sc.getUserPrincipal();
+		int id = user.getID();
+		Connection conn = null;
+		Statement stmt = null;
+		String query = "DELETE from sessions where user_id = " + id;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			throw new SQLException();
+		} catch (URISyntaxException e)
+		{
+			throw new URISyntaxException("", "");
+		}
+		
 		return "";
 	}
 	
