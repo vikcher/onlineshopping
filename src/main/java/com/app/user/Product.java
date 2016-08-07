@@ -104,7 +104,7 @@ public class Product {
 		JSONObject ret = new JSONObject();
 		JSONObject newObj = null;
 		int count = 0;
-		String query = "SELECT * from products where id = " + id;
+		String query = "SELECT * from products where product_id = " + id;
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
@@ -122,7 +122,7 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return User.generateJSONString("Error", "An internal server error occured");
+	     	return User.generateJSONString("Error", "An internal server error occured" + e.getMessage());
 		}
 		
 		ret.put("Type", "Success");
