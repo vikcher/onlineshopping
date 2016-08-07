@@ -11,6 +11,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -48,15 +49,22 @@ public class Product {
 	}
 	
 	@GET
+	@Path("{category_id}")
 	@Produces("application/json")
-	public String getFullProductList()
+	public String getFullProductList(@DefaultValue("-1") @QueryParam("category_id") String category_id)
 	{
+		int cat_id = Integer.valueOf(category_id);
 		Connection conn = null;
 		Statement stmt = null;
 		JSONObject ret = new JSONObject();
 		JSONArray arr = new JSONArray();
 		int count = 0;
-		String query = "SELECT * from products";
+		String query = null; 
+		if (cat_id == -1)
+		    query = "SELECT * from products";
+		else
+			query = "SELECT * from products where category_id = " + cat_id;
+		
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
@@ -85,6 +93,7 @@ public class Product {
 		return ret.toJSONString();
 	}
 	
+	/*
 	@GET
 	@Produces("application/json")
 	public String getProductsByCategoryID(@PathParam("category") String CategoryID)
@@ -122,4 +131,5 @@ public class Product {
 		ret.put("Product list", arr);
 		return ret.toJSONString();		
 	}
+	*/
 }
