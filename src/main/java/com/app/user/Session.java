@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.Random;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -82,6 +83,14 @@ public class Session {
 		obj.put("Message", "User " + uname + " successfully logged in");
 		obj.put("Token", token);
 		return obj.toJSONString();
+	}
+	
+	@DELETE
+	@Secured
+	@Produces("application/json")
+	public String userLogout()
+	{
+		return "";
 	}
 	
 	
