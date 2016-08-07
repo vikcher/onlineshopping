@@ -23,10 +23,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>users/*</url-pattern>
+        <url-pattern>/users/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Sessions</servlet-name>
-        <url-pattern>sessions/*</url-pattern>
+        <url-pattern>/sessions/*</url-pattern>
     </servlet-mapping>
 </web-app>
