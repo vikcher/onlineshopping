@@ -92,33 +92,32 @@ public class Product {
 		return ret.toJSONString();
 	}
 	
-	/*
+	
 	@GET
 	@Produces("application/json")
-	public String getProductsByCategoryID(@PathParam("category") String CategoryID)
+	@Path("{productID}")
+	public String getProductsByCategoryID(@PathParam("productID") String productID)
 	{
-		int id = Integer.valueOf(CategoryID);
+		int id = Integer.valueOf(productID);
 		Statement stmt = null;
 		Connection conn = null;
 		JSONObject ret = new JSONObject();
-		JSONArray arr = new JSONArray();
+		JSONObject newObj = null;
 		int count = 0;
-		String query = "SELECT * from products where category_id = " + id;
+		String query = "SELECT * from products where id = " + id;
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
-				JSONObject newObj = new JSONObject();
+				newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
 				newObj.put("Product name", rs.getInt("product_name"));
 				newObj.put("Product description", rs.getInt("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
-				arr.add(newObj);
-				count++;
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
@@ -126,9 +125,7 @@ public class Product {
 		}
 		
 		ret.put("Type", "Success");
-		ret.put("Number of products", count);
-		ret.put("Product list", arr);
+		ret.put("Product details", newObj);
 		return ret.toJSONString();		
 	}
-	*/
 }
