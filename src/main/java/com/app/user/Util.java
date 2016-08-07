@@ -17,21 +17,19 @@ public class Util {
 	public static final String SALT = "ramdom-salt-string";
 	public static Connection conn;
 	public static Statement stmt;
-
-	Util() throws SQLException, URISyntaxException
-	{
-	    conn = DbConn.getConnection();
-		stmt = conn.createStatement();	
-	}
 	
-	public static ResultSet executeQuery(String query) throws SQLException
+	public static ResultSet executeQuery(String query) throws SQLException, URISyntaxException
 	{
+		conn = DbConn.getConnection();
+		stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		return rs;
 	}
 	
-	public static void executeUpdate(String query) throws SQLException 
+	public static void executeUpdate(String query) throws SQLException, URISyntaxException 
 	{
+		conn = DbConn.getConnection();
+		stmt = conn.createStatement();
 		stmt.executeUpdate(query);
 	}
 	
