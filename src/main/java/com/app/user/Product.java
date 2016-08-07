@@ -83,7 +83,7 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return User.generateJSONString("Error", "An internal server error occured");
+	     	return User.generateJSONString("Error", "An internal server error occured" + e.getMessage());
 		}
 		
 		ret.put("Type", "Success");
