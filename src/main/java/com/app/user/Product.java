@@ -49,21 +49,20 @@ public class Product {
 	}
 	
 	@GET
-	@Path("{category_id}")
 	@Produces("application/json")
 	public String getFullProductList(@DefaultValue("-1") @QueryParam("category_id") String category_id)
 	{
-		int cat_id = Integer.valueOf(category_id);
+		
 		Connection conn = null;
 		Statement stmt = null;
 		JSONObject ret = new JSONObject();
 		JSONArray arr = new JSONArray();
 		int count = 0;
-		String query = null; 
-		if (cat_id == -1)
+		String query = null;
+		if (category_id.equals("-1"))
 		    query = "SELECT * from products";
 		else
-			query = "SELECT * from products where category_id = " + cat_id;
+			query = "SELECT * from products where category_id = " + category_id;
 		
 		try {
 			conn = DbConn.getConnection();
