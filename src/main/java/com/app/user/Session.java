@@ -1,4 +1,4 @@
-package com.app.session;
+package com.app.user;
 
 import java.math.BigInteger;
 import java.net.URISyntaxException;
@@ -18,7 +18,6 @@ import javax.ws.rs.Produces;
 import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
-import com.app.user.User;
 
 @Path("sessions")
 public class Session {
