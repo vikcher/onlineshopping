@@ -37,11 +37,12 @@ public class Category {
 				obj.put("ID", rs.getInt("category_id"));
 				obj.put("Category_name", rs.getString("category_name"));
 				obj.put("Category_description", rs.getString("category_description"));
+				obj.put("Category discount","");
 				arr.add(obj);
 				count++;
 			}
 		} catch (SQLException | URISyntaxException e) {
-			User.generateJSONString("Error", "An internal error occured");
+			Util.generateJSONString("Error", "An internal error occured");
 		}
 		
 		JSONObject finalJSON = new JSONObject();

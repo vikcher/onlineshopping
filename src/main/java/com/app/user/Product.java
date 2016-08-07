@@ -24,6 +24,7 @@ import com.app.dbconn.DbConn;
 @Path("products")
 public class Product {
 
+	/*
 	public String getCategoryNameFromID(int id) throws SQLException, URISyntaxException
 	{
 	       String ret = null;
@@ -47,6 +48,32 @@ public class Product {
 	       }
 	       return ret;
 	}
+	
+	
+	public String getProductDiscount(int id) throws SQLException, URISyntaxException
+	{
+		Connection conn = null;
+		Statement stmt = null;
+		String query = "Select discount from product_discount where product_id = "  + id;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next())
+			{
+			    return String.valueOf(rs.getFloat("discount"));	
+			}
+		}  catch (SQLException e)
+	    {
+	        throw new SQLException();
+	    } catch (URISyntaxException e)
+	    {
+	        throw new URISyntaxException("","");
+	    }
+		
+	    return "No discount on this product";	
+	}
+	*/
 	
 	@GET
 	@Produces("application/json")
@@ -72,18 +99,19 @@ public class Product {
 			{
 				JSONObject newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
-				newObj.put("Category", getCategoryNameFromID(rs.getInt("category_id")));
+				newObj.put("Category", Util.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product name", rs.getString("product_name"));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
+				newObj.put("Discount", Util.getProductDiscount(rs.getInt("product_id")));
 				arr.add(newObj);
 				count++;
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return User.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
 		}
 		
 		ret.put("Type", "Success");
@@ -114,19 +142,19 @@ public class Product {
 				newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
 				newObj.put("Product name", rs.getString("product_name"));
-				newObj.put("Category", getCategoryNameFromID(rs.getInt("category_id")));
+				newObj.put("Category", Util.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
+				newObj.put("Discount", Util.getProductDiscount(rs.getInt("product_id")));
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return User.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
 		}
-		
 		ret.put("Type", "Success");
 		ret.put("Product details", newObj);
-		return ret.toJSONString();		
+		return ret.toJSONString();
 	}
 }

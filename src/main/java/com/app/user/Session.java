@@ -68,17 +68,17 @@ public class Session {
 		try {
 			if (!User.checkIfUserExists(uname))
 			{
-				return User.generateJSONString("Error", "User does not exist");
+				return Util.generateJSONString("Error", "User does not exist");
 			} 
 			
-			if (User.authenticateUser(uname,password))
+			if (Util.authenticateUser(uname,password))
 			{
 				token = generateToken(uname);
 			} else {
-				return User.generateJSONString("Error", "The password entered is invalid. Please try again");
+				return Util.generateJSONString("Error", "The password entered is invalid. Please try again");
 			}
 		} catch (SQLException | URISyntaxException | NoSuchAlgorithmException e) {
-			return User.generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "An internal error occured");
 		}
 		
 		JSONObject obj = new JSONObject();

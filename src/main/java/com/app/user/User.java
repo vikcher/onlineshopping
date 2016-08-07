@@ -30,11 +30,9 @@ import com.app.dbconn.DbConn;
 @Path("users")
 public class User {
 	
+	/*
 	public static final String SALT = "ramdom-salt-string";
-	
-	/* 
-	 * Function to generate a Hash for a password to store in the Database
-	 */
+
 	private static String generateHash(String input) throws NoSuchAlgorithmException {
 		StringBuilder hash = new StringBuilder();
 
@@ -54,7 +52,6 @@ public class User {
 
 		return hash.toString();
 	}
-	
 	public static boolean authenticateUser(String uname, String password) throws NoSuchAlgorithmException, SQLException, URISyntaxException
 	{
 		String query = null;
@@ -76,10 +73,10 @@ public class User {
 			throw new URISyntaxException("","");
 		}
 		
-		String saltedPassword = SALT + password;
+		String saltedPassword = Util.SALT + password;
 		String hashedPassword;
 		try {
-			hashedPassword = generateHash(saltedPassword);
+			hashedPassword = Util.generateHash(saltedPassword);
 		} catch (NoSuchAlgorithmException e) {
 			throw new NoSuchAlgorithmException();
 		}
@@ -91,6 +88,7 @@ public class User {
 		
 	    return false;
 	}
+	*/
 	
 	/*
 	 * Function to check if user exists.
@@ -152,13 +150,14 @@ public class User {
 		return id;
 	}
 	
+	/*
 	public static String generateJSONString (String type, String message)
 	{
 		 JSONObject obj = new JSONObject();
 		 obj.put("Type", type);
 		 obj.put("Message", message);
 		 return obj.toJSONString();
-	}
+	}*/
 
 	@POST
 	@Produces("application/json")
@@ -178,19 +177,19 @@ public class User {
 		try {
 			if(checkIfUserExists(uname))
 			{
-				return generateJSONString("Error", "Username \"" + uname + "\" already exists. Please choose another username");
+				return Util.generateJSONString("Error", "Username \"" + uname + "\" already exists. Please choose another username");
 			}
 		} catch (SQLException | URISyntaxException e1) {
 			// TODO Auto-generated catch block
-			return generateJSONString ("Error", "An internal error occured");
+			return Util.generateJSONString ("Error", "An internal error occured");
 		}
 		
 		String hashedPassword;
 		try{
-			hashedPassword = generateHash(SALT + password);
+			hashedPassword = Util.generateHash(Util.SALT + password);
 		} catch (NoSuchAlgorithmException e)
 		{
-			return generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "An internal error occured");
 		}
 		
 		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\", \"email\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\',\'" + email + "\')";
@@ -200,15 +199,15 @@ public class User {
     		int ret = stmt.executeUpdate(query);
     		if (ret != 1)
     		{
-    			return generateJSONString("Error", "Internal database error");
+    			return Util.generateJSONString("Error", "Internal database error");
     		}
 		} catch (Exception e)
 		{
-			return generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "An internal error occured");
 		}
 		
 		/* Success! Added the user to users database */
-		return generateJSONString("Success", "Successfully added user " + uname);
+		return Util.generateJSONString("Success", "Successfully added user " + uname);
 	}
 	
 	/*
@@ -238,25 +237,25 @@ public class User {
     			/* If a user is already found, return a JSON error string*/
     			if (rs.getInt("total") == 0)
     			{
-    				return generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
+    				return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
     			}
     		}
 		} catch (Exception e) {
-	        return generateJSONString ("Error", "An internal error occured");
+	        return Util.generateJSONString ("Error", "An internal error occured");
 		}
 		
 		Boolean authenticated = false;
 		try {
-			authenticated = authenticateUser(uname, password);
+			authenticated = Util.authenticateUser(uname, password);
 		} catch (SQLException | NoSuchAlgorithmException  | URISyntaxException e)
 		{
-		    return generateJSONString("Error", "An internal error occured");	
+		    return Util.generateJSONString("Error", "An internal error occured");	
 		}
 		
 		
 		if (!authenticated)
 		{
-			return generateJSONString("Error", "The password does not match for user \"" + uname + "\". Cannot delete user");
+			return Util.generateJSONString("Error", "The password does not match for user \"" + uname + "\". Cannot delete user");
 		}
 		
 		/* 
@@ -269,14 +268,14 @@ public class User {
     		int ret = stmt.executeUpdate(query);
     		if (ret != 1)
     		{
-    			return generateJSONString("Error", "Internal database error");
+    			return Util.generateJSONString("Error", "Internal database error");
     		}
 		} catch (Exception e)
 		{
-			return generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "An internal error occured");
 		}	
 		
 		/* Success! Deleted the user from users database */
-		return generateJSONString("Success", "Successfully removed user " + uname);
+		return Util.generateJSONString("Success", "Successfully removed user " + uname);
 	}
 }
