@@ -66,7 +66,8 @@ public class User {
 	public String registerUser(@FormParam("username") String uname, 
 			                   @FormParam("password") String password,
 			                   @FormParam("firstname") String firstName,
-			                   @FormParam("lastname") String lastName)
+			                   @FormParam("lastname") String lastName,
+			                   @FormParam("email") String email)
 	{
 	 
 		Connection conn = null;
@@ -98,7 +99,7 @@ public class User {
 			return generateJSONString("Error", "An internal error occured");
 		}
 		
-		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\')";
+		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\", \"email\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\',\'" + email + "\')";
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
@@ -113,7 +114,7 @@ public class User {
 		}
 		
 		/* Success! Added the user to users database */
-		return generateJSONString("Success", "Successfully added user" + uname);
+		return generateJSONString("Success", "Successfully added user " + uname);
 	}
 	
 	/*
@@ -193,7 +194,7 @@ public class User {
 		
 		
 		/* Success! Deleted the user from users database */
-		return generateJSONString("Success", "Successfully removed user" + uname);
+		return generateJSONString("Success", "Successfully removed user " + uname);
 	}
 	
     /**
