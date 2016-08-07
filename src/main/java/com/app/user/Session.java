@@ -91,10 +91,12 @@ public class Session {
 	@DELETE
 	@Secured
 	@Produces("application/json")
-	public String userLogout(@Context SecurityContext sc) throws SQLException, URISyntaxException
+	public String userLogout(@Context SecurityContext sc) 
 	{
+		JSONObject obj;
 		UserAuth user = (UserAuth) sc.getUserPrincipal();
 		int id = user.getID();
+		String name = user.getUserName();
 		Connection conn = null;
 		Statement stmt = null;
 		String query = "DELETE from sessions where user_id = " + id;
@@ -102,15 +104,16 @@ public class Session {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
 			stmt.executeUpdate(query);
-		} catch (SQLException e) {
-			throw new SQLException();
-		} catch (URISyntaxException e)
-		{
-			throw new URISyntaxException("", "");
+		} catch (SQLException | URISyntaxException e) {
+			obj = new JSONObject();
+			obj.put("Type", "Error");
+			obj.put("Message", "You are not logged in");
+			return obj.toJSONString();
 		}
 		
-		return "";
+		obj = new JSONObject();
+		obj.put("Type" , "success");
+		obj.put("Message", "User " + name + " successfully logged out");
+		return obj.toJSONString();
 	}
-	
-	
 }
