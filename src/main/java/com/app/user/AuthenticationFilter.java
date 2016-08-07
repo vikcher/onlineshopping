@@ -60,15 +60,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	private UserPrincipal validateToken(String token) throws SQLException, URISyntaxException
 	{
 		UserPrincipal authenticatedUser = null;
-	    Connection conn = null;
-	    Statement stmt = null;
 	    int count = 0;
 		/* Retrieve User ID count */
 		String query = "SELECT COUNT(*) AS total from sessions where token = \'"+ token +"\'";
 		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		ResultSet rs = stmt.executeQuery(query);
+    		ResultSet rs = Util.executeQuery(query);
     		while (rs.next())
     		{
     			count = rs.getInt("total");
@@ -86,9 +82,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		
 		query = "SELECT * from users where id = (SELECT user_id from sessions where token = \'" + token + "\')";
 		try{
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = Util.executeQuery(query);
 			while (rs.next())
 			{
 				authenticatedUser = new UserPrincipal();
