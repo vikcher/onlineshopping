@@ -107,10 +107,10 @@ public class Cart {
 		int cart_product_id = 0;
 		try {
 			cart_id = checkIfUserCartExists(user_id);
+			conn = DbConn.getConnection();
 			if (cart_id == -1)
 			{
 			    query = "INSERT INTO cart (\"user_id\") VALUES (" + user_id + ")";
-			    conn = DbConn.getConnection();
 			    stmt = conn.createStatement();
 			    stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			    rs = stmt.getGeneratedKeys();
