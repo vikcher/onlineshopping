@@ -20,27 +20,43 @@ public class Util {
 	
 	public static ResultSet executeQuery(String query) throws SQLException, URISyntaxException
 	{
-		conn = DbConn.getConnection();
-		stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery(query);
+		ResultSet rs = null;
+		try {
+		    conn = DbConn.getConnection();
+		    stmt = conn.createStatement();
+		    rs = stmt.executeQuery(query);
+		} finally{
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
 		return rs;
 	}
 	
 	public static void executeUpdate(String query) throws SQLException, URISyntaxException 
 	{
-		conn = DbConn.getConnection();
-		stmt = conn.createStatement();
-		stmt.executeUpdate(query);
+		try {
+		 conn = DbConn.getConnection();
+	     stmt = conn.createStatement();
+		 stmt.executeUpdate(query);
+		} finally {
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
 	}
 	
 	public static String getCategoryNameFromID(int id) throws SQLException, URISyntaxException
 	{
 	       String ret = null;
+	       ResultSet rs = null;
 	       String query = "Select category_name from categories where category_id = " + id;
-	       ResultSet rs = executeQuery(query);
-	       while (rs.next())
-	       {
-	           ret = rs.getString("category_name");
+	       try {
+	           rs = executeQuery(query);
+	           while (rs.next())
+	           {
+	               ret = rs.getString("category_name");
+	           }
+	       } finally {
+	    	   if (rs != null) rs.close();
 	       }
 	       return ret;
 	}
@@ -48,12 +64,33 @@ public class Util {
 	public static String getProductDiscount(int id) throws SQLException, URISyntaxException
 	{
 		String query = "Select discount from product_discount where product_id = "  + id;
-	    ResultSet rs = executeQuery(query);
-		while (rs.next())
-		{
-			return String.valueOf(rs.getFloat("discount"));	
-		}
+	    ResultSet rs = null;
+	    try {
+	        rs = executeQuery(query);
+		    while (rs.next())
+		    {
+			    return String.valueOf(rs.getFloat("discount"));	
+		    }
+	    } finally {
+	    	if (rs != null) rs.close();
+	    }
 	    return "No discount on this product";	
+	}
+	
+	public static String getCategoryDiscount(int id) throws SQLException, URISyntaxException
+	{
+		String query = "Select discount from category_discount where product_id = "  + id;
+	    ResultSet rs = null;
+	    try {
+	        rs = executeQuery(query);
+		    while (rs.next())
+		    {
+			    return String.valueOf(rs.getFloat("discount"));	
+		    }
+	    } finally {
+	    	if (rs != null) rs.close();
+	    }
+	    return "No discount on this category";	
 	}
 	
 	/* 
@@ -87,11 +124,17 @@ public class Util {
 	{
 		String query = "SELECT password from users where username = \'"+ uname +"\'";
 		String retrievedPassword = null;
-    	ResultSet rs = executeQuery(query);
-    	while (rs.next())
-    	{
+    	ResultSet rs = null;
+    	try {
+    		rs = executeQuery(query);
+    		while (rs.next())
+    		{
     			retrievedPassword = rs.getString("password");
+    		}
+    	} finally {
+    		if (rs != null) rs.close();
     	}
+    	
 		String saltedPassword = Util.SALT + password;
 		String hashedPassword;
 		hashedPassword = Util.generateHash(saltedPassword);
@@ -109,14 +152,19 @@ public class Util {
 	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
 	{
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
-    	ResultSet rs = executeQuery(query);
-    	while (rs.next())
-    	{
-    		/* If a user is already found, return a JSON error string*/
-    		if (rs.getInt("total") > 0)
+    	ResultSet rs = null;
+    	try {
+    		rs = executeQuery(query);
+    		while (rs.next())
     		{
-    			return true;
+    			/* If a user is already found, return a JSON error string*/
+    			if (rs.getInt("total") > 0)
+    			{
+    				return true;
+    			}
     		}
+    	} finally {
+    		if (rs != null) rs.close();
     	}
 		return false;
 	}
@@ -129,12 +177,17 @@ public class Util {
 		int id = -1;
 		/* Retrieve User ID */
 		String query = "SELECT id from users where username = \'"+ uname +"\'";
-		ResultSet rs = executeQuery(query);
-    	while (rs.next())
-    	{
-    		id = rs.getInt("id");
-    			
-    	}
+		ResultSet rs = null;
+		try {
+			rs = executeQuery(query);
+			while (rs.next())
+			{
+				id = rs.getInt("id");
+
+			}
+		} finally {
+			if (rs != null) rs.close();
+		}
 		return id;
 	}
 

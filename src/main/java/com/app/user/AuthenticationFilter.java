@@ -63,8 +63,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	    int count = 0;
 		/* Retrieve User ID count */
 		String query = "SELECT COUNT(*) AS total from sessions where token = \'"+ token +"\'";
+		ResultSet rs = null;
 		try {
-    		ResultSet rs = Util.executeQuery(query);
+    		rs = Util.executeQuery(query);
     		while (rs.next())
     		{
     			count = rs.getInt("total");
@@ -73,16 +74,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     				return null;
     			}
     		}
-		} catch (SQLException e) {
-	        throw new SQLException();
-		} catch (URISyntaxException e)
-		{
-			throw new URISyntaxException("", "");
+		} finally {
+			if (rs != null) rs.close();
 		}
 		
 		query = "SELECT * from users where id = (SELECT user_id from sessions where token = \'" + token + "\')";
 		try{
-			ResultSet rs = Util.executeQuery(query);
+			rs = Util.executeQuery(query);
 			while (rs.next())
 			{
 				authenticatedUser = new UserPrincipal();
@@ -92,12 +90,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 				authenticatedUser.setLastName(rs.getString("last_name"));
 				authenticatedUser.setEmail(rs.getString("email"));
 			}
-		} catch (SQLException e)
-		{
-			throw new SQLException();
-		} catch (URISyntaxException e)
-		{
-			throw new URISyntaxException("","");
+		} finally {
+			if (rs != null) rs.close();
 		}
 		
 		return authenticatedUser;

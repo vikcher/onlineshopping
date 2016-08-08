@@ -212,18 +212,26 @@ public class User {
 	
 		/* Find if the username exists*/
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
+		ResultSet rs = null;
 		try {
-		    ResultSet rs = Util.executeQuery(query);
-    	    while (rs.next())
-         	{
-    	    	/* If a user is already found, return a JSON error string*/
-    		    if (rs.getInt("total") == 0)
-    		    {
-    			    return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
-    		    }
-    	    }
-		} catch (Exception e) {
-	        return Util.generateJSONString ("Error", "An internal error occured");
+			rs = Util.executeQuery(query);
+			while (rs.next())
+			{
+				/* If a user is already found, return a JSON error string*/
+				if (rs.getInt("total") == 0)
+				{
+					return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
+				}
+			}
+		} catch (SQLException | URISyntaxException e) {
+			return Util.generateJSONString ("Error", "An internal error occured");
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+
+				}
 		}
 		
 		Boolean authenticated = false;
@@ -245,7 +253,7 @@ public class User {
 		query = "DELETE FROM users where username = \'" + uname + "\'";
 		try {
 			Util.executeUpdate(query);
-		} catch (Exception e)
+		} catch (SQLException | URISyntaxException e)
 		{
 			return Util.generateJSONString("Error", "An internal error occured");
 		}	

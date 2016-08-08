@@ -127,8 +127,9 @@ public class Product {
 		JSONObject newObj = null;
 		int count = 0;
 		String query = "SELECT * from products where product_id = " + id;
+		ResultSet rs = null;
 		try {
-			ResultSet rs = Util.executeQuery(query);
+			rs = Util.executeQuery(query);
 			while (rs.next())
 			{
 				newObj = new JSONObject();
@@ -144,6 +145,12 @@ public class Product {
 			
 		} catch (URISyntaxException | SQLException e) {
 	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
 		}
 		ret.put("Type", "Success");
 		ret.put("Product details", newObj);
