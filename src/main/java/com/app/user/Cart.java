@@ -118,6 +118,8 @@ public class Cart {
 			    	cart_id = rs.getInt(1);
 			    }
 			}
+			
+			
 			cart_product_id = checkDuplicateProductInCart(cart_id, product_id, color, size);
 			if (cart_product_id == -1)
 			{
@@ -146,7 +148,7 @@ public class Cart {
 				return Util.generateJSONString("Error", "An unknown server error occured " + e.getMessage());
 			}
 		}
-		return "";
+		return Util.generateJSONString("Debug message", "cart_product_id " + cart_product_id);
 	}
 	
 	@POST
