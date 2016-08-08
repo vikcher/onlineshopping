@@ -101,7 +101,7 @@ public class Cart {
 		Connection conn = null;
 		Connection conn2 = null;
 		Statement stmt = null;
-		PreparedStatement psmt = null;
+		Statement stmt2 = null;
 		ResultSet rs = null;
 		String query = null;
 		int cart_id = 0;
@@ -122,13 +122,9 @@ public class Cart {
 			}
 			
             conn2 = DbConn.getConnection();
-			psmt = conn2.prepareStatement("INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)");
-			psmt.setInt(1, cart_id);
-			psmt.setInt(product_id, product_id);
-			psmt.setInt(3, qty);
-			psmt.setString(4, color);
-			psmt.setString(5, size);
-			psmt.executeUpdate();
+            stmt2 = conn2.createStatement();
+            query = "INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (" + cart_id +"," + product_id + "," + qty + ",\'" + color + "\'.\'" + size + "\')"; 
+			stmt2.executeUpdate(query);			
 			
 		} catch (SQLException | URISyntaxException e) {
 			// TODO Auto-generated catch block
@@ -137,7 +133,7 @@ public class Cart {
 			try {
 			if (rs != null) rs.close();
  			if (stmt != null) stmt.close();
-			if (psmt != null) psmt.close();
+			if (stmt2 != null) stmt2.close();
 			if (conn != null) conn.close();
 			if (conn2 != null) conn2.close();
 			} catch (SQLException e) {
