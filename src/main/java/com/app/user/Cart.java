@@ -26,55 +26,20 @@ import com.app.dbconn.DbConn;
 
 @Path("cart")
 public class Cart {
-
-	public static int checkIfUserCartExists(int userID) throws SQLException, URISyntaxException
-	{
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		String query = "SELECT * from cart where user_id = " + userID;
-		try {
-			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
-			while (rs.next())
-			{
-				return rs.getInt("cart_id");
-			}
-		} finally {
-		    if (rs != null) rs.close();
-		    if (stmt != null) stmt.close();
-		    if (conn != null) conn.close();
-		}
-	    return -1;	
-	}
 	
-	/*
-	public static int checkDuplicateProductInCart(int cart_id, int productID, String color, String size) throws SQLException, URISyntaxException
+	private int checkIfUserCartExists(int user_id) throws URISyntaxException, SQLException
 	{
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			conn = DbConn.getConnection();
-			stmt = conn.prepareStatement("SELECT cart_product_id from category_products where cart_id = ? and product_id = ? and color = ? and size = ?");
-			stmt.setInt(1, cart_id);
-			stmt.setInt(2, productID);
-			stmt.setString(3, color);
-			stmt.setString(4, size);
-			rs = stmt.executeQuery();
-			while (rs.next())
-			{
-				return rs.getInt("cart_product_id");
-			}
-		} finally {
-			if (rs != null) rs.close();
-			if (stmt != null) stmt.close();
-			if (conn != null) conn.close();
+		Connection conn = DbConn.getConnection();
+		Statement stmt = conn.createStatement();
+		String query = "SELECT * from cart where user_id = " + user_id;
+		ResultSet rs = stmt.executeQuery(query);
+		while (rs.next())
+		{
+			return rs.getInt("cart_id");
 		}
 		
-		return -1;
-	}*/
+	    return -1;	
+	}
 	
 	@GET
 	@Secured
@@ -89,58 +54,35 @@ public class Cart {
 	@Produces("application/json")
 	@Path("{product_id}")
 	public String addToCart(@PathParam("product_id") String productID,
-			                @QueryParam("color") String color,
-			                @DefaultValue("3") @QueryParam("quantity") String quantity,
-			                @QueryParam("size") String size,
+			                @DefaultValue ("") @QueryParam("color") String color,
+			                @DefaultValue("") @QueryParam("quantity") String quantity,
+			                @DefaultValue("") @QueryParam("") String size,
 			                @Context SecurityContext sc)
 	{
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int user_id = user.getID();
-		int product_id = Integer.valueOf(productID);
-		int qty = Integer.parseInt(quantity);
-		Connection conn = null;
-		Connection conn2 = null;
-		Statement stmt = null;
-		Statement stmt2 = null;
-		ResultSet rs = null;
-		String query = null;
-		int cart_id = 0;
-		int cart_product_id = 0;
+		if (color.equals(""))
+		{
+			return Util.generateJSONString("Error", "Please specify the color");
+		}
+		if (quantity.equals(""))
+		{
+			return Util.generateJSONString("Error", "Please specify the quantity");
+		}
+		if (size.equals(""))
+		{
+			return Util.generateJSONString("Error", "Please specify the size");
+		}
+		
+		int cart_id = -1;
 		try {
 			cart_id = checkIfUserCartExists(user_id);
-			conn = DbConn.getConnection();
-			if (cart_id == -1)
-			{
-			    query = "INSERT INTO cart (\"user_id\") VALUES (" + user_id + ")";
-			    stmt = conn.createStatement();
-			    stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-			    rs = stmt.getGeneratedKeys();
-			    while (rs.next())
-			    {
-			    	cart_id = rs.getInt(1);
-			    }
-			}
-			
-            conn2 = DbConn.getConnection();
-            stmt2 = conn2.createStatement();
-            query = "INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (" + cart_id +"," + product_id + "," + qty + ",\'" + color + "\'.\'" + size + "\')"; 
-			stmt2.executeUpdate(query);			
-			
-		} catch (SQLException | URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-			if (rs != null) rs.close();
- 			if (stmt != null) stmt.close();
-			if (stmt2 != null) stmt2.close();
-			if (conn != null) conn.close();
-			if (conn2 != null) conn2.close();
-			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "An unknown server error occured " + e.getMessage());
-			}
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured");
 		}
-		return Util.generateJSONString("Debug message", "cart_product_id " + cart_product_id);
+		
+		return String.valueOf(cart_id);
 	}
 	
 	@POST

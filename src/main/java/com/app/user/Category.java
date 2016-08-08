@@ -63,6 +63,7 @@ public class Category {
 	    return "No discount on this category";	
 	}
 	
+	/*
 	@GET
 	@Produces("application/json")
 	public static String viewProductCategories()
@@ -105,4 +106,5 @@ public class Category {
 		finalJSON.put("Category list", arr);
 		return finalJSON.toJSONString();
 	}
+	*/
 }

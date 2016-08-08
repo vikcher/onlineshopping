@@ -62,7 +62,7 @@ public class Product {
 			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
-			    return String.valueOf(rs.getFloat("discount"));	
+			    return String.valueOf(rs.getFloat("discount")) + "%";	
 			}
 		} finally {
 			if (rs != null) rs.close();
