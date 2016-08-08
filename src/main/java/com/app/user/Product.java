@@ -48,38 +48,40 @@ public class Product {
 	       }
 	       return ret;
 	}
-	
+	*/
 	
 	public String getProductDiscount(int id) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
 		Statement stmt = null;
+		ResultSet rs = null;
 		String query = "Select discount from product_discount where product_id = "  + id;
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
 			    return String.valueOf(rs.getFloat("discount"));	
 			}
-		}  catch (SQLException e)
-	    {
-	        throw new SQLException();
-	    } catch (URISyntaxException e)
-	    {
-	        throw new URISyntaxException("","");
-	    }
+		} finally {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
 		
 	    return "No discount on this product";	
 	}
-	*/
+	
 	
 	@GET
 	@Produces("application/json")
 	public String getFullProductList(@DefaultValue("-1") @QueryParam("category_id") String category_id)
 	{
-		
+	
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
 		JSONObject ret = new JSONObject();
 		JSONArray arr = new JSONArray();
 		int count = 0;
@@ -90,24 +92,34 @@ public class Product {
 			query = "SELECT * from products where category_id = " + category_id;
 		
 		try {
-			ResultSet rs = Util.executeQuery(query);
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
 				JSONObject newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
-				newObj.put("Category", Util.getCategoryNameFromID(rs.getInt("category_id")));
+				newObj.put("Category", Category.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product name", rs.getString("product_name"));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
-				newObj.put("Discount", Util.getProductDiscount(rs.getInt("product_id")));
+				newObj.put("Discount", getProductDiscount(rs.getInt("product_id")));
 				arr.add(newObj);
 				count++;
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
 	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stmt != null) stmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+			}
 		}
 		
 		ret.put("Type", "Success");
@@ -127,30 +139,37 @@ public class Product {
 		JSONObject newObj = null;
 		int count = 0;
 		String query = "SELECT * from products where product_id = " + id;
+		Connection conn = null;
+		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			rs = Util.executeQuery(query);
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
 				newObj = new JSONObject();
 				newObj.put("Product ID", rs.getInt("product_id"));
 				newObj.put("Product name", rs.getString("product_name"));
-				newObj.put("Category", Util.getCategoryNameFromID(rs.getInt("category_id")));
+				newObj.put("Category", Category.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
 				newObj.put("options", rs.getString("options"));
 				newObj.put("File URL", rs.getString("img_url"));
-				newObj.put("Discount", Util.getProductDiscount(rs.getInt("product_id")));
+				newObj.put("Discount", getProductDiscount(rs.getInt("product_id")));
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
 	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
+            try {
+            	if (rs != null) rs.close();
+            	if (stmt != null) stmt.close();
+            	if (conn != null) conn.close();
+            } catch (SQLException e)
+            {
+            	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+            }
 		}
 		ret.put("Type", "Success");
 		ret.put("Product details", newObj);

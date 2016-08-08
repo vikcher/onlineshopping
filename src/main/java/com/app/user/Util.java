@@ -18,6 +18,7 @@ public class Util {
 	public static Connection conn;
 	public static Statement stmt;
 	
+	/*
 	public static ResultSet executeQuery(String query) throws SQLException, URISyntaxException
 	{
 		ResultSet rs = null;
@@ -26,7 +27,6 @@ public class Util {
 		    stmt = conn.createStatement();
 		    rs = stmt.executeQuery(query);
 		} finally{
-			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
 		return rs;
@@ -39,28 +39,35 @@ public class Util {
 	     stmt = conn.createStatement();
 		 stmt.executeUpdate(query);
 		} finally {
-			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
 	}
+	
 	
 	public static String getCategoryNameFromID(int id) throws SQLException, URISyntaxException
 	{
 	       String ret = null;
 	       ResultSet rs = null;
 	       String query = "Select category_name from categories where category_id = " + id;
+	       Connection conn = null;
+	       Statement stmt = null;
 	       try {
-	           rs = executeQuery(query);
+	    	   conn = DbConn.getConnection();
+	    	   stmt = conn.createStatement();
+	           rs = stmt.executeQuery(query);
 	           while (rs.next())
 	           {
 	               ret = rs.getString("category_name");
 	           }
 	       } finally {
 	    	   if (rs != null) rs.close();
+	    	   if (stmt != null) stmt.close();
+	    	   if (conn != null) conn.close();
 	       }
 	       return ret;
 	}
-	
+	*/
+	/*
 	public static String getProductDiscount(int id) throws SQLException, URISyntaxException
 	{
 		String query = "Select discount from product_discount where product_id = "  + id;
@@ -77,6 +84,7 @@ public class Util {
 	    return "No discount on this product";	
 	}
 	
+	/*
 	public static String getCategoryDiscount(int id) throws SQLException, URISyntaxException
 	{
 		String query = "Select discount from category_discount where product_id = "  + id;
@@ -92,6 +100,7 @@ public class Util {
 	    }
 	    return "No discount on this category";	
 	}
+	*/
 	
 	/* 
 	 * Function to generate a Hash for a password to store in the Database
@@ -120,6 +129,7 @@ public class Util {
 		 return obj.toJSONString();
 	}
 	
+	/*
 	public static boolean authenticateUser(String uname, String password) throws NoSuchAlgorithmException, SQLException, URISyntaxException
 	{
 		String query = "SELECT password from users where username = \'"+ uname +"\'";
@@ -145,10 +155,9 @@ public class Util {
 		}	
 	    return false;
 	}
+	*/
 	
 	/*
-	 * Function to check if user exists.
-	 */
 	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
 	{
 		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
@@ -157,7 +166,6 @@ public class Util {
     		rs = executeQuery(query);
     		while (rs.next())
     		{
-    			/* If a user is already found, return a JSON error string*/
     			if (rs.getInt("total") > 0)
     			{
     				return true;
@@ -167,15 +175,16 @@ public class Util {
     		if (rs != null) rs.close();
     	}
 		return false;
-	}
+	}*/
 	
 	/*
 	 * Function to get User ID. Returns -1 if user does not exist.
 	 */
+	/*
 	public static int getUserID(String uname) throws SQLException, URISyntaxException
 	{
 		int id = -1;
-		/* Retrieve User ID */
+	
 		String query = "SELECT id from users where username = \'"+ uname +"\'";
 		ResultSet rs = null;
 		try {
@@ -189,6 +198,6 @@ public class Util {
 			if (rs != null) rs.close();
 		}
 		return id;
-	}
+	}*/
 
 }

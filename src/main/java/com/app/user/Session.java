@@ -30,9 +30,19 @@ public class Session {
 	{
 		Random random = new SecureRandom();
 	    String token = new BigInteger(130, random).toString(32);
-	    int user_id = Util.getUserID(uname);
+	    int user_id = User.getUserID(uname);
+	    Connection conn = null;
+	    Statement stmt = null;
 	    String query = "INSERT INTO sessions (\"user_id\", \"token\") VALUES(" + user_id + ",\'" + token + "\')";
-    	Util.executeUpdate(query);
+	    try {
+	    	conn = DbConn.getConnection();
+	    	stmt = conn.createStatement();
+	    	stmt.executeUpdate(query);	
+	    } finally {
+	    	if (stmt != null) stmt.close();
+	    	if (conn != null) conn.close();
+	    }
+    	
 		return token;
 	}
 	
@@ -49,12 +59,12 @@ public class Session {
 	{
 		String token = null;
 		try {
-			if (!Util.checkIfUserExists(uname))
+			if (!User.checkIfUserExists(uname))
 			{
 				return Util.generateJSONString("Error", "User does not exist");
 			} 
 			
-			if (Util.authenticateUser(uname,password))
+			if (User.authenticateUser(uname,password))
 			{
 				token = generateToken(uname);
 			} else {
@@ -81,18 +91,25 @@ public class Session {
 		int id = user.getID();
 		String name = user.getUserName();
 		String query = "DELETE from sessions where user_id = " + id;
+		Connection conn = null;
+		Statement stmt = null;
 		try {
-			Util.executeUpdate(query);
+			conn = DbConn.getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
 		} catch (SQLException | URISyntaxException e) {
-			obj = new JSONObject();
-			obj.put("Type", "Error");
-			obj.put("Message", "You are not logged in");
-			return obj.toJSONString();
+			return Util.generateJSONString("Error", "You are not logged in");
+		} finally {
+			try {
+			    if (stmt != null) stmt.close();
+			    if (conn != null) conn.close();
+			} catch (SQLException e)
+			{
+				return Util.generateJSONString("Error", "An internal error occured");
+			}
+			
 		}
 		
-		obj = new JSONObject();
-		obj.put("Type" , "success");
-		obj.put("Message", "User " + name + " successfully logged out");
-		return obj.toJSONString();
+		return Util.generateJSONString("Success", "User " + name + " successfully logged out");
 	}
 }
