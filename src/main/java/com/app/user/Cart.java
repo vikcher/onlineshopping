@@ -95,7 +95,7 @@ public class Cart {
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int user_id = user.getID();
 		int product_id = Integer.valueOf(productID);
-		int qty = Integer.valueOf(quantity);
+		int qty = Integer.parseInt(quantity);
 		Connection conn = null;
 		Statement stmt = null;
 		PreparedStatement psmt = null;
