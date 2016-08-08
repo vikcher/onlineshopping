@@ -99,6 +99,7 @@ public class Cart {
 		int product_id = Integer.valueOf(productID);
 		int qty = Integer.parseInt(quantity);
 		Connection conn = null;
+		Connection conn2 = null;
 		Statement stmt = null;
 		PreparedStatement psmt = null;
 		ResultSet rs = null;
@@ -120,21 +121,15 @@ public class Cart {
 			    }
 			}
 			
-			//cart_product_id = checkDuplicateProductInCart(cart_id, product_id, color, size);
-			//if (cart_product_id == -1)
-			//{
-			psmt = conn.prepareStatement("INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)");
+            conn2 = DbConn.getConnection();
+			psmt = conn2.prepareStatement("INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)");
 			psmt.setInt(1, cart_id);
 			psmt.setInt(product_id, product_id);
 			psmt.setInt(3, qty);
 			psmt.setString(4, color);
 			psmt.setString(5, size);
 			psmt.executeUpdate();
-			//} else {
-			    //psmt = conn.prepareStatement("UPDATE cart_products SET quantity = quantity + ? where cart_product_id = " + cart_product_id);
-			    //psmt.setInt(1, qty);
-			    //psmt.executeUpdate();
-			//}
+			
 		} catch (SQLException | URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,6 +139,7 @@ public class Cart {
  			if (stmt != null) stmt.close();
 			if (psmt != null) psmt.close();
 			if (conn != null) conn.close();
+			if (conn2 != null) conn2.close();
 			} catch (SQLException e) {
 				return Util.generateJSONString("Error", "An unknown server error occured " + e.getMessage());
 			}
