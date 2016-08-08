@@ -56,7 +56,7 @@ public class Cart {
 	public String addToCart(@PathParam("product_id") String productID,
 			                @DefaultValue ("") @QueryParam("color") String color,
 			                @DefaultValue("") @QueryParam("quantity") String quantity,
-			                @DefaultValue("") @QueryParam("") String size,
+			                @DefaultValue("") @QueryParam("size") String size,
 			                @Context SecurityContext sc)
 	{
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
