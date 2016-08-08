@@ -49,6 +49,7 @@ public class Cart {
 	    return -1;	
 	}
 	
+	/*
 	public static int checkDuplicateProductInCart(int cart_id, int productID, String color, String size) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
@@ -73,7 +74,7 @@ public class Cart {
 		}
 		
 		return -1;
-	}
+	}*/
 	
 	@GET
 	@Secured
@@ -119,22 +120,21 @@ public class Cart {
 			    }
 			}
 			
-			
-			cart_product_id = checkDuplicateProductInCart(cart_id, product_id, color, size);
-			if (cart_product_id == -1)
-			{
-				psmt = conn.prepareStatement("INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)");
-				psmt.setInt(1, cart_id);
-				psmt.setInt(product_id, product_id);
-				psmt.setInt(3, qty);
-				psmt.setString(4, color);
-				psmt.setString(5, size);
-			    psmt.executeUpdate();
-			} else {
-			    psmt = conn.prepareStatement("UPDATE cart_products SET quantity = quantity + ? where cart_product_id = " + cart_product_id);
-			    psmt.setInt(1, qty);
-			    psmt.executeUpdate();
-			}
+			//cart_product_id = checkDuplicateProductInCart(cart_id, product_id, color, size);
+			//if (cart_product_id == -1)
+			//{
+			psmt = conn.prepareStatement("INSERT into cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)");
+			psmt.setInt(1, cart_id);
+			psmt.setInt(product_id, product_id);
+			psmt.setInt(3, qty);
+			psmt.setString(4, color);
+			psmt.setString(5, size);
+			psmt.executeUpdate();
+			//} else {
+			    //psmt = conn.prepareStatement("UPDATE cart_products SET quantity = quantity + ? where cart_product_id = " + cart_product_id);
+			    //psmt.setInt(1, qty);
+			    //psmt.executeUpdate();
+			//}
 		} catch (SQLException | URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
