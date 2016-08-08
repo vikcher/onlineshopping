@@ -88,7 +88,7 @@ public class Cart {
 	@Path("{product_id}")
 	public String addToCart(@PathParam("product_id") String productID,
 			                @QueryParam("color") String color,
-			                @QueryParam("quantity") String quantity,
+			                @DefaultValue("3") @QueryParam("quantity") String quantity,
 			                @QueryParam("size") String size,
 			                @Context SecurityContext sc)
 	{
