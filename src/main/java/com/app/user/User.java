@@ -16,9 +16,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.json.simple.JSONObject;
 
@@ -54,6 +56,7 @@ public class User {
 		return hash.toString();
 	}
 	*/
+	
 	public static boolean authenticateUser(String uname, String password) throws NoSuchAlgorithmException, SQLException, URISyntaxException
 	{
 		String query = null;
@@ -218,13 +221,16 @@ public class User {
 	 */
 	@DELETE
 	@Produces("application/json")
+	@Secured
 	@Consumes("application/x-www-form-urlencoded")
-	public String deleteUser(@FormParam("username") String uname, 
-                             @FormParam("password") String password)
+	public String deleteUser(@Context SecurityContext sc)
 	{
 	
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
+		int id = user.getID();
+		String uname = user.getUserName();
 		/* Find if the username exists*/
-		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
+		String query = "SELECT COUNT(*) AS total from users where id = \'"+ id +"\'";
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -253,23 +259,11 @@ public class User {
 			}
 		}
 		
-		Boolean authenticated = false;
-		try {
-			authenticated = authenticateUser(uname, password);
-		} catch (SQLException | NoSuchAlgorithmException  | URISyntaxException e)
-		{
-		    return Util.generateJSONString("Error", "An internal error occured");	
-		}
-		
-		if (!authenticated)
-		{
-			return Util.generateJSONString("Error", "The password does not match for user \"" + uname + "\". Cannot delete user");
-		}
 		
 		/* 
 		 * Password is correct, proceed to delete
 		 */
-		query = "DELETE FROM users where username = \'" + uname + "\'";
+		query = "DELETE FROM users where id = \'" + id + "\'";
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.createStatement();
