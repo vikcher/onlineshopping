@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -55,7 +56,8 @@ public class Session {
 	@Produces("application/json")
 	@Consumes("application/x-www-form-urlencoded")
 	public String userLogin(@FormParam("username") String uname, 
-            				@FormParam("password") String password)
+            				@FormParam("password") String password,
+            				@Context HttpServletResponse response)
 	{
 		String token = null;
 		try {
@@ -77,7 +79,7 @@ public class Session {
 		JSONObject obj = new JSONObject();
 		obj.put("Type", "Success");
 		obj.put("Message", "User " + uname + " successfully logged in");
-		obj.put("Token", token);
+		response.setHeader("Authentication Token", token);
 		return obj.toJSONString();
 	}
 	
@@ -109,7 +111,6 @@ public class Session {
 			}
 			
 		}
-		
 		return Util.generateJSONString("Success", "User " + name + " successfully logged out");
 	}
 }
