@@ -41,6 +41,32 @@ public class Cart {
 	    return -1;	
 	}
 	
+	private int checkIfDuplicateItemExistsInCart (int cart_id, int product_id, String color, String size) throws URISyntaxException, SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT * from cart_products where cart_id = ? and product_id = ? and color = ? and size = ?");
+			stmt.setInt(1, cart_id);
+			stmt.setInt(2, product_id);
+			stmt.setString(3, color);
+			stmt.setString(4, size);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				return rs.getInt("cart_product_id");	
+			}
+		} finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+		}
+		
+		return -1;
+	}
+	
 	@GET
 	@Secured
 	@Produces("application/json")
@@ -82,7 +108,14 @@ public class Cart {
 			return Util.generateJSONString("Error", "An internal server error occured");
 		}
 		
-		return String.valueOf(cart_id);
+		int cart_product_id = 0;
+		try {
+			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.valueOf(productID), color, size);
+		} catch (SQLException | URISyntaxException e) {
+			return Util.generateJSONString("Error", "An internal server error occured");
+		}
+		
+		return String.valueOf(cart_product_id);
 	}
 	
 	@POST
