@@ -258,7 +258,7 @@ public class User {
 	@Produces("application/json")
 	@Secured
 	@Consumes("application/x-www-form-urlencoded")
-	public String deleteUser(@Context SecurityContext sc)
+	public String deleteUser(@Context SecurityContext sc) 
 	{
 	
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
