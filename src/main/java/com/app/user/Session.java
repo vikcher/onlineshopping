@@ -88,12 +88,13 @@ public class Session {
 				return Util.generateJSONString("Error", "703", "The password entered is invalid. Please try again");
 			}
 		} catch (SQLException | URISyntaxException | NoSuchAlgorithmException e) {
-			return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal error occured ");
 		}
 
 		response.setHeader("Authentication Token", token);
 		return Util.generateJSONString("Success", "600", "User " + uname + " successfully logged in");
 	}
+	
 	
 	/**
 	 * Logging out a user. Path DELETE /sessions

@@ -38,6 +38,7 @@ public class Util {
 	}
 	
 	
+	
 	/**
 	 * Generate JSON response object from the response type, response code and message
 	 * @param type - Response type (Success or error)

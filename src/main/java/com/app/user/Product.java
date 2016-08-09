@@ -192,14 +192,14 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "800",  "An internal server error occured");
 		} finally {
 			try {
 				if (rs != null) rs.close();
 				if (stmt != null) stmt.close();
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "800", "An internal server error occured" + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured");
 			}
 		}
 		
@@ -236,7 +236,7 @@ public class Product {
 				return Util.generateJSONString("Error", "702",  "No product with given ID exists");
 			}
 		} catch (NumberFormatException | URISyntaxException | SQLException e1) {
-			return Util.generateJSONString("Error", "800",  "An internal server error occured" + e1.getMessage());
+			return Util.generateJSONString("Error", "800",  "An internal server error occured");
 		}
 		
 		try {
@@ -259,7 +259,7 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException | JSONException e) {
-	     	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "800",  "An internal server error occured");
 		} finally {
             try {
             	if (rs != null) rs.close();
@@ -267,7 +267,7 @@ public class Product {
             	if (conn != null) conn.close();
             } catch (SQLException e)
             {
-            	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
+            	return Util.generateJSONString("Error", "800",  "An internal server error occured");
             }
 		}
 		ret.put("Type", "Success");
