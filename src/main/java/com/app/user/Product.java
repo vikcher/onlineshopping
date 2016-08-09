@@ -56,7 +56,7 @@ public class Product {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String query = "Select discount from product_discount where product_id = ?";
+		String query = "Select * from products where product_id = ?";
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
