@@ -2,6 +2,7 @@ package com.app.user;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,6 +50,30 @@ public class Product {
 	       return ret;
 	}
 	*/
+	
+	public static boolean checkIfProductExists (int id) throws URISyntaxException, SQLException 
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String query = "Select discount from product_discount where product_id = ?";
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+			    return true;	
+			}
+		} finally {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		
+	    return false;		
+	}
 	
 	public String getProductDiscount(int id) throws SQLException, URISyntaxException
 	{

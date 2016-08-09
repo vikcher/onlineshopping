@@ -20,6 +20,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
@@ -96,13 +97,26 @@ public class Cart {
 	{
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int user_id = user.getID();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		try {
+			if (!Product.checkIfProductExists(Integer.parseInt(productID)))
+			{
+				return Util.generateJSONString("Error", "The specified product does not exist");	
+			}
+		} catch (NumberFormatException | URISyntaxException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if (color.equals(""))
 		{
 			return Util.generateJSONString("Error", "Please specify the color");
 		}
-		if (quantity.equals(""))
+		if (quantity.equals("") || StringUtils.isNumeric(quantity))
 		{
-			return Util.generateJSONString("Error", "Please specify the quantity");
+			return Util.generateJSONString("Error", "Wrong format of parameter quantity");
 		}
 		if (size.equals(""))
 		{
@@ -127,6 +141,39 @@ public class Cart {
 			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.valueOf(productID), color, size);
 		} catch (SQLException | URISyntaxException e) {
 			return Util.generateJSONString("Error", "An internal server error occured");
+		}
+		try {
+			String query = null;
+			conn = DbConn.getConnection();
+			conn.setAutoCommit(false);
+			if (cart_product_id != -1)
+			{
+				query = "UPDATE cart_product_id set quantity = quantity + ? where cart_product_id = ?";
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, Integer.parseInt(quantity));
+				stmt.setInt(2, cart_product_id);
+			} else {
+				query = "INSERT INTO cart_product_id (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)";
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, cart_id);
+				stmt.setInt(2, Integer.parseInt(productID));
+				stmt.setInt(3, Integer.parseInt(quantity));
+				stmt.setString(4, color);
+				stmt.setString(5, size);
+			}
+			stmt.executeUpdate();
+			conn.commit();
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured");
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				return Util.generateJSONString("Error", "An internal server error occured");
+			}
 		}
 		
 		return String.valueOf(cart_product_id);
