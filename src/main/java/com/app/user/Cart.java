@@ -480,8 +480,8 @@ public class Cart {
 	@Secured
 	@Produces("application/json")
 	@Consumes("application/x-www-form-urlencoded")
-	public String checkOut(@FormParam("shipping_addr") String shipping_addr,
-			               @FormParam("state") String state_code,
+	public String checkOut(@DefaultValue("") @FormParam("shipping_addr") String shipping_addr,
+			               @DefaultValue("") @FormParam("state") String state_code,
 			               @DefaultValue ("") @FormParam("promo_code") String promo_code,
 			               @Context SecurityContext sc)
 	{
@@ -497,6 +497,16 @@ public class Cart {
 		double after_promo_code_discount = 0.0;
 		double sales_tax_amount = 0.0;
 		double after_tax_total = 0.0;
+		
+		if (shipping_addr == "")
+		{
+			return Util.generateJSONString("Error", "Shipping address is required");
+		}
+		
+		if (state_code == "")
+		{
+			return Util.generateJSONString("Error", "Shipping state is required");
+		}
 		
 		int cart_id = 0;
 		try {
@@ -542,6 +552,10 @@ public class Cart {
 			sales_tax_percentage = getTaxForState(state_code);
 		} catch (URISyntaxException | SQLException e) {
 			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		if (sales_tax_percentage == -1.0)
+		{
+			return Util.generateJSONString("Error", "The state code you entered is invalid. Please try again");
 		}
 		ret.put("Sales tax percentage", sales_tax_percentage + "%");
 		sales_tax_amount = after_promo_code_discount*(sales_tax_percentage/100);
