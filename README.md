@@ -536,6 +536,7 @@ Retrospective and possible enhancements
 - The authorization tokens for users should have a timeout value. This can be possible if they are stored in Redis or Memcached. This is presently not implemented.
 - Using Jackson library for Java for JSON parsing from Objects to Java can make requests and responses much easier.
 - Adding a guest checkout feature
+- Adding pagination for requests such as view products, so that only a certain number of items can be retrieved per request.   This optimizes bandwidth usage and performance
 
 References
 ==========
