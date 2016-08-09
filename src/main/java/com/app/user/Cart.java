@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -27,6 +28,33 @@ import com.app.dbconn.DbConn;
 
 @Path("cart")
 public class Cart {
+	
+	private String validateProductCartInput (String productID, String quantity, String color, String size)
+	{
+		try {
+			if (!Product.checkIfProductExists(Integer.parseInt(productID)))
+			{
+				return Util.generateJSONString("Error", "The specified product does not exist");	
+			}
+		} catch (NumberFormatException | URISyntaxException | SQLException e) {
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		if (color.equals(""))
+		{
+			return Util.generateJSONString("Error", "Please specify the color");
+		}
+		if (quantity.equals("") || !StringUtils.isNumeric(quantity))
+		{
+			return Util.generateJSONString("Error", "Wrong format of parameter quantity");
+		}
+		if (size.equals(""))
+		{
+			return Util.generateJSONString("Error", "Please specify the size");
+		}
+		
+		return "";
+	}
 	
 	private int getCartID(int user_id) throws URISyntaxException, SQLException
 	{
@@ -77,12 +105,117 @@ public class Cart {
 		return -1;
 	}
 	
+	private int getQuantity (int cart_product_id) throws URISyntaxException, SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT quantity from cart_products where cart_product_id = ?");
+			stmt.setInt(1, cart_product_id);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				return rs.getInt("quantity");	
+			}
+		} finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+		}
+		
+		return -1;
+	}
+	
 	@GET
 	@Secured
 	@Produces("application/json")
 	public String viewCart()
 	{
 		return "";
+	}
+	
+	@DELETE
+	@Secured
+	@Produces("application/json")
+	@Path("{product_id}")
+	public String removeFromCart(@PathParam("product_id") String productID,
+            					@DefaultValue ("") @QueryParam("color") String color,
+            					@DefaultValue("") @QueryParam("quantity") String quantity,
+            					@DefaultValue("") @QueryParam("size") String size,
+            					@Context SecurityContext sc)
+	{
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
+		int user_id = user.getID();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		String validation = validateProductCartInput(productID, color, quantity,size);
+		if (!validation.equals(""))
+		{
+			return validation;
+		}
+		
+		int cart_id = 0;
+		try {
+			cart_id = getCartID(user_id);
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		if (cart_id == -1)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured got cart id -1");
+		}
+		
+		int cart_product_id = 0;
+		try {
+			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.parseInt(productID), color, size);
+		} catch (NumberFormatException | URISyntaxException | SQLException e) {
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		int cartQuantity = 0;
+		String query = null;
+		if (cart_product_id == -1)
+		{
+			return Util.generateJSONString("Success", "Nothing to remove from cart");
+		} else {
+			try {
+				cartQuantity = getQuantity(cart_product_id);
+                conn = DbConn.getConnection();
+                conn.setAutoCommit(false);
+				if (cartQuantity < Integer.parseInt(quantity)) {
+					return Util.generateJSONString("Error", "Given quantity to delete is greater than quantity available in cart");
+				} else if (cartQuantity == Integer.parseInt(quantity))
+				{
+					query = "DELETE from cart_products where cart_product_id = ?";
+					stmt = conn.prepareStatement(query);
+					stmt.setInt(1, cart_product_id);
+				} else if (cartQuantity > Integer.parseInt(quantity))
+				{
+					query = "UPDATE cart_products SET quantity = quantity - ? where cart_product_id = ?";
+					stmt = conn.prepareStatement(query);
+					stmt.setInt(1, Integer.parseInt(quantity));
+					stmt.setInt(2, cart_product_id);
+				}
+				stmt.executeUpdate();
+				conn.commit();
+			} catch (URISyntaxException | SQLException e) {
+				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			} finally {
+				try {
+					if (stmt != null) stmt.close();
+					conn.setAutoCommit(true);
+					if (conn != null) conn.close();
+				} catch (SQLException e) {
+					return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+				}
+			}
+		}
+		
+		return Util.generateJSONString("Success", "Quantity " + Integer.parseInt(quantity) + " of product " + Integer.parseInt(productID) + " removed from cart");
 	}
 	
 	@PUT
@@ -100,27 +233,10 @@ public class Cart {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		
-		try {
-			if (!Product.checkIfProductExists(Integer.parseInt(productID)))
-			{
-				return Util.generateJSONString("Error", "The specified product does not exist");	
-			}
-		} catch (NumberFormatException | URISyntaxException | SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		if (color.equals(""))
+		String validation = validateProductCartInput(productID, color, quantity,size);
+		if (!validation.equals(""))
 		{
-			return Util.generateJSONString("Error", "Please specify the color");
-		}
-		if (quantity.equals("") || !StringUtils.isNumeric(quantity))
-		{
-			return Util.generateJSONString("Error", "Wrong format of parameter quantity");
-		}
-		if (size.equals(""))
-		{
-			return Util.generateJSONString("Error", "Please specify the size");
+			return validation;
 		}
 		
 		int cart_id = 0;
@@ -176,7 +292,7 @@ public class Cart {
 			}
 		}
 		
-		return String.valueOf(cart_product_id);
+		return Util.generateJSONString("Success", "Item successfully added to cart");
 	}
 	
 	@POST
