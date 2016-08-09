@@ -5,6 +5,7 @@ API Guide
 ---------
 
 - USER - Path : /users
+  --------------------
   - **POST** Used to register a new user
     - Input : 
       - Format : ***x-www-form-urlencoded*** 
@@ -38,6 +39,7 @@ API Guide
         - **600** - Successfully removed user account
 
 - SESSION (Path : /sessions)
+  --------------------------
   - **POST** Used for user login
     - Input : 
       - Format : ***x-www-form-urlencoded*** 
@@ -69,6 +71,7 @@ API Guide
       - **600** : User logged out successfully
 
 - PRODUCT - Path : /products
+  --------------------------
   - **GET** Get a list of all products
     - - ***Unauthorzied API. Does not require the user to be logged in***
     - Input : Optional - Query param *category_id*
@@ -173,6 +176,7 @@ API Guide
       - **600** : Success
       
 - CATEGORY - Path : /categories
+  -----------------------------
   - **GET** Get a list of all product categories
     - - ***Unauthorzied API. Does not require the user to be logged in***
     - Input : None required
@@ -231,6 +235,7 @@ API Guide
       - **600** : Success
       
 - CART - Path : /cart
+  --------------------
   - **PUT** (/cart/{productID}?size='size'&color='color'&quantity='quantity'
     - Used to add a new item to cart. If the same item is present in the cart (same color and size), the quantity is just updated.
     - Input : 
