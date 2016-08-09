@@ -73,6 +73,7 @@ API guide
 Response codes
 ---------------
   - All the API calls return a 200 OK HTTP response but the custom response codes are embedded in the JSON response. All response codes starting with (6xx) denote success messages. Response codes starting with 7 (7xx) denote errors with  the API input. Response codes starting with 8 (8xx) denote system errors.
+  - All the APIs return response in JSON format
   - Success codes
     - 600 : Operation succeeded
     - 601 : Nothing to do (No-Op)
