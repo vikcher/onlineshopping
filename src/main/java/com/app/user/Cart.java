@@ -148,12 +148,12 @@ public class Cart {
 			conn.setAutoCommit(false);
 			if (cart_product_id != -1)
 			{
-				query = "UPDATE cart_product_id set quantity = quantity + ? where cart_product_id = ?";
+				query = "UPDATE cart_products set quantity = quantity + ? where cart_product_id = ?";
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, Integer.parseInt(quantity));
 				stmt.setInt(2, cart_product_id);
 			} else {
-				query = "INSERT INTO cart_product (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)";
+				query = "INSERT INTO cart_products (cart_id, product_id, quantity, color, size) VALUES (?,?,?,?,?)";
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, cart_id);
 				stmt.setInt(2, Integer.parseInt(productID));
