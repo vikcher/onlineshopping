@@ -27,15 +27,24 @@ import com.app.dbconn.DbConn;
 @Path("cart")
 public class Cart {
 	
-	private int checkIfUserCartExists(int user_id) throws URISyntaxException, SQLException
+	private int getCartID(int user_id) throws URISyntaxException, SQLException
 	{
-		Connection conn = DbConn.getConnection();
-		Statement stmt = conn.createStatement();
-		String query = "SELECT * from cart where user_id = " + user_id;
-		ResultSet rs = stmt.executeQuery(query);
-		while (rs.next())
-		{
-			return rs.getInt("cart_id");
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT * from cart where user_id = ?");
+			stmt.setInt(1,user_id);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				return rs.getInt("cart_id");
+			}
+		} finally {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
 		}
 		
 	    return -1;	
@@ -100,10 +109,15 @@ public class Cart {
 			return Util.generateJSONString("Error", "Please specify the size");
 		}
 		
-		int cart_id = -1;
+		int cart_id = 0;
 		try {
-			cart_id = checkIfUserCartExists(user_id);
+			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured");
+		}
+		
+		if (cart_id == -1)
 		{
 			return Util.generateJSONString("Error", "An internal server error occured");
 		}

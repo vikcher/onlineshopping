@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -170,7 +171,9 @@ public class User {
 	 
 		String query = null;
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		int user_id = 0;
 		/* Find if username already exists */
 		try {
 			if(checkIfUserExists(uname))
@@ -190,23 +193,55 @@ public class User {
 			return Util.generateJSONString("Error", "An internal error occured");
 		}
 		
-		query = "INSERT INTO users (\"username\", \"password\", \"first_name\", \"last_name\", \"email\") VALUES(\'" + uname + "\',\'" + hashedPassword + "\', \'" + firstName + "\', \'" + lastName +"\',\'" + email + "\')";
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    		stmt.executeUpdate(query);
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("INSERT INTO users (username, password, first_name, last_name, email) VALUES (?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, uname);
+			stmt.setString(2, hashedPassword);
+			stmt.setString(3, firstName);
+			stmt.setString(4, lastName);
+			stmt.setString(5, email);
+    		stmt.executeUpdate();
+    		rs = stmt.getGeneratedKeys();
+    		rs.next();
+    		user_id = rs.getInt(1);
+    		conn.commit();
 		} catch (Exception e)
 		{
 			return Util.generateJSONString("Error", "An internal error occured");
 		} finally {
 			try {
+				if (rs != null) rs.close();
 				if (stmt != null) stmt.close();
 				if (conn != null) conn.close();
+				conn.setAutoCommit(true);
 			} catch (SQLException e)
 			{
 				return Util.generateJSONString("Error", "An internal error occured");
 			}
 		}
+		
+		try {
+			conn = DbConn.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("INSERT into cart (user_id) VALUES (?)");
+			stmt.setInt(1, user_id);
+			stmt.executeUpdate();
+			conn.commit();
+		} catch (URISyntaxException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				if (conn != null) conn.close();
+				conn.setAutoCommit(true);
+			} catch (SQLException e) {
+				return Util.generateJSONString("Error", "An internal error occured");
+			}
+		}
+		
 		
 		/* Success! Added the user to users database */
 		return Util.generateJSONString("Success", "Successfully added user " + uname);
