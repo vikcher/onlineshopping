@@ -214,8 +214,8 @@ public class User {
 			try {
 				if (rs != null) rs.close();
 				if (stmt != null) stmt.close();
-				if (conn != null) conn.close();
 				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
 				return Util.generateJSONString("Error", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
@@ -235,8 +235,8 @@ public class User {
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
-				if (conn != null) conn.close();
 				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
 			} catch (SQLException e) {
 				return Util.generateJSONString("Error", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
 			}
