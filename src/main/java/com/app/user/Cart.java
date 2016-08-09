@@ -134,7 +134,7 @@ public class Cart {
 	{
 	    double productDiscount = Product.getProductDiscount(productID);
 	    double categoryDiscount = Category.getCategoryDiscount(categoryID);
-	    return (price*Math.max(productDiscount, categoryDiscount));
+	    return (price*(double)(Math.max(productDiscount, categoryDiscount)/100));
 	}
 	
 	@GET
