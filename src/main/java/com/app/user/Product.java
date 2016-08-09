@@ -64,7 +64,7 @@ public class Product {
 	    boolean sizeFound = false;
 	    try {
 	    	conn = DbConn.getConnection();
-	    	stmt = conn.prepareStatement("SELECT options from product where product_id = ?");
+	    	stmt = conn.prepareStatement("SELECT options from products where product_id = ?");
 	    	stmt.setInt(1, id);
 	    	rs = stmt.executeQuery();
 	    	while (rs.next())
