@@ -15,11 +15,11 @@ import com.app.dbconn.DbConn;
 public class Util {
 	
 	public static final String SALT = "ramdom-salt-string";
-	public static Connection conn;
-	public static Statement stmt;
-		
+
 	/* 
 	 * Function to generate a Hash for a password to store in the Database
+	 * Uses the SHA1 hashing algorithm to generate a digest.
+	 * Reference : https://dzone.com/articles/storing-passwords-java-web
 	 */
 	public static String generateHash(String input) throws NoSuchAlgorithmException {
 		StringBuilder hash = new StringBuilder();
@@ -37,6 +37,14 @@ public class Util {
 		return hash.toString();
 	}
 	
+	
+	/**
+	 * Generate JSON response object from the response type, response code and message
+	 * @param type - Response type (Success or error)
+	 * @param responseCode - Response code
+	 * @param message - Custom error messsage
+	 * @return - JSON object formatted with the parameters
+	 */
 	public static String generateJSONString (String type, String responseCode, String message)
 	{
 		 JSONObject obj = new JSONObject();

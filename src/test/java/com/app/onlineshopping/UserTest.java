@@ -11,7 +11,7 @@ import com.app.user.User;
 
 import static org.junit.Assert.assertEquals;
 
-public class MyResourceTest extends JerseyTest {
+public class UserTest extends JerseyTest {
 
     @Override
     protected Application configure() {
@@ -25,6 +25,6 @@ public class MyResourceTest extends JerseyTest {
     public void testGetIt() {
         final String responseMsg = target().path("myresource").request().get(String.class);
 
-        assertEquals("Hello, Heroku!", responseMsg);
+        assertEquals("", responseMsg);
     }
 }

@@ -41,7 +41,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	            requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 		
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new NotAuthorizedException("No authorization header provided");
+			requestContext.abortWith(
+			        Response.ok(Util.generateJSONString("Error", "700", "Not authorized"), MediaType.APPLICATION_JSON).build());
         }
 		
 		String token = authorizationHeader.substring("Bearer".length()).trim();
