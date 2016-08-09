@@ -41,8 +41,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	            requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 		
 		if (authorizationHeader == null || authorizationHeader.equals("") || !authorizationHeader.startsWith("Bearer ")) {
-			requestContext.abortWith(
-			        Response.ok(Util.generateJSONString("Error", "700", "Not authorized"), MediaType.APPLICATION_JSON).build());
+			throw new NotAuthorizedException("Authorization header must be provided");
         }
 		
 		String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -50,7 +49,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		try {
 			user = validateToken(token);
 		} catch (SQLException | URISyntaxException e) {
-			// TODO Auto-generated catch block
 			requestContext.abortWith(
 			        Response.ok(Util.generateJSONString("Error", "800", "An internal server error occured"), MediaType.APPLICATION_JSON).build());
 		}

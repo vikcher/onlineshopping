@@ -48,7 +48,7 @@ public class Cart {
 				return Util.generateJSONString("Error", "702", "The specified product does not exist");	
 			}
 		} catch (NumberFormatException | URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured");
 		}
 		
 		if (color.equals(""))
@@ -351,14 +351,14 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		CartResult cr = null;
 		try {
 			cr = buildCartItems(cart_id);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		ret.put("Type", "Success");
@@ -392,7 +392,7 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800" ,"An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800" ,"An internal server error occured ");
 		}
 		
 		try {
@@ -403,7 +403,7 @@ public class Cart {
 			stmt.executeUpdate();
 			conn.commit();
 		} catch (SQLException | URISyntaxException e){
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
@@ -411,7 +411,7 @@ public class Cart {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			}
 		}
 	    return Util.generateJSONString("Success", "600",  "Your cart is now empty");	
@@ -451,19 +451,19 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		if (cart_id == -1)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured got cart id -1");
+			return Util.generateJSONString("Error", "800", "An internal server error occured");
 		}
 		
 		int cart_product_id = 0;
 		try {
 			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.parseInt(productID), color, size);
 		} catch (NumberFormatException | URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		int cartQuantity = 0;
@@ -493,14 +493,14 @@ public class Cart {
 				stmt.executeUpdate();
 				conn.commit();
 			} catch (URISyntaxException | SQLException e) {
-				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			} finally {
 				try {
 					if (stmt != null) stmt.close();
 					conn.setAutoCommit(true);
 					if (conn != null) conn.close();
 				} catch (SQLException e) {
-					return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+					return Util.generateJSONString("Error", "800", "An internal server error occured ");
 				}
 			}
 		}
@@ -534,10 +534,8 @@ public class Cart {
 			{
 				return Util.generateJSONString("Error", "702", "The specified color/size not found in the given product");
 			}
-			//return Product.validateProductColorAndSize(Integer.parseInt(productID), color, size);
 		} catch (NumberFormatException | SQLException | URISyntaxException | JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		int cart_id = 0;
@@ -545,7 +543,7 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		if (cart_id == -1)
@@ -557,7 +555,7 @@ public class Cart {
 		try {
 			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.valueOf(productID), color, size);
 		} catch (SQLException | URISyntaxException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		try {
 			String query = null;
@@ -582,14 +580,14 @@ public class Cart {
 			conn.commit();
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
 				conn.setAutoCommit(true);
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			}
 		}
 		
@@ -631,7 +629,7 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		
 		try {
@@ -656,7 +654,7 @@ public class Cart {
 		try {
 			sales_tax_percentage = getTaxForState(state_code);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		if (sales_tax_percentage == -1.0)
 		{
@@ -668,8 +666,7 @@ public class Cart {
 		    try {
 				promo_code_discount_percentage = getPromoCodeDiscount(promo_code);
 			} catch (URISyntaxException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			}
 		    if (promo_code_discount_percentage == -1.0)
 		    {
@@ -681,7 +678,7 @@ public class Cart {
 		try {
 			cr = buildCartItems(cart_id);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		}
 		ret.put("Type", "Success");
 		ret.put("Shipping address", shipping_addr);

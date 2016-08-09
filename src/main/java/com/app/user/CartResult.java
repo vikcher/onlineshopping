@@ -43,7 +43,5 @@ public class CartResult {
 	}
 	public void setTotal_items(double total_items) {
 		this.total_items = total_items;
-	}
-	
-		
+	}	
 }

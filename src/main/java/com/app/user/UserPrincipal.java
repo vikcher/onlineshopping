@@ -24,7 +24,6 @@ public class UserPrincipal implements Principal {
 	public String getEmail() {return email;}
 	public int getID() {return id;}
 	
-	
 	@Override
 	public String getName() {
 		return firstName + " " + lastName;

@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import javax.ws.rs.core.SecurityContext;
 
+
 public class UserSecurityContext implements SecurityContext {
 
 	UserPrincipal user;

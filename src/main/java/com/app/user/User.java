@@ -181,7 +181,6 @@ public class User {
 				return Util.generateJSONString("Error", "701", "Username \"" + uname + "\" already exists. Please choose another username");
 			}
 		} catch (SQLException | URISyntaxException e1) {
-			// TODO Auto-generated catch block
 			return Util.generateJSONString ("Error", "800", "An internal error occured");
 		}
 		
@@ -209,7 +208,7 @@ public class User {
     		conn.commit();
 		} catch (Exception e)
 		{
-			return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+			return Util.generateJSONString("Error", "800", "An internal error occured ");
 		} finally {
 			try {
 				if (rs != null) rs.close();
@@ -218,7 +217,7 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+				return Util.generateJSONString("Error", "800", "An internal error occured ");
 			}
 		}
 		
@@ -230,15 +229,14 @@ public class User {
 			stmt.executeUpdate();
 			conn.commit();
 		} catch (URISyntaxException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
 				conn.setAutoCommit(true);
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+				return Util.generateJSONString("Error", "800", "An internal error occured ");
 			}
 		}
 		
@@ -288,7 +286,7 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString ("Error", "800", "An internal error occured" + e.getMessage());
+				return Util.generateJSONString ("Error", "800", "An internal error occured");
 			}
 		}
 		
