@@ -277,6 +277,7 @@ public class Cart {
 				newObject.put("Product description", rs.getString("product_description"));
 				newObject.put("Product price", (double)rs.getDouble("product_price")*rs.getInt("quantity"));
 				newObject.put("Product price per qty", rs.getDouble("product_price"));
+				newObject.put("Quantity", rs.getInt("quantity"));
 				newObject.put("Color", rs.getString("color"));
 				newObject.put("Image URL", rs.getString("img_url"));
 				ret.setTotal_price(ret.getTotal_price() + (double)(rs.getDouble("product_price")*rs.getInt("quantity"))) ;
