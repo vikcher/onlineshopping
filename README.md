@@ -3,22 +3,22 @@ Java and Jersey based REST API for emulating a shopping cart checkout workflow
 
 Use cases
 =========
-- User registration *(See POST /user in API guide)*
-- User de-registration *(SEE DELETE/user in API guide)*
-- User login *(See POST /sessions in API guide)*
-- User logout *(SEE DELETE /sessions in API guide)*
-- View product categories *(See GET /categories in API guide)*
-- View all products or products by category *(See GET /products in API guide)*
-- View specific product by ID *(See GET /products/{productID} in API guide)*
-- Add product to cart *(See PUT /cart/{productID} in API guide)*
-- Remove product from cart *(See DELETE /cart/{productID} in API guide)*
-- Empty cart *(See DELETE /cart in API guide)*
-- View cart *(See GET /cart in API guide)*
-- Apply promo codes *(See POST /cart in API guide)*
-- Enter shipping and billing address *(See POST /cart in API guide)*
-- Apply sales tax based on shipping state *(See POST /cart in API guide)*
+- User registration *(See POST /user in API reference)*
+- User de-registration *(SEE DELETE/user in API reference)*
+- User login *(See POST /sessions in API reference)*
+- User logout *(SEE DELETE /sessions in API reference)*
+- View product categories *(See GET /categories in API reference)*
+- View all products or products by category *(See GET /products in API reference)*
+- View specific product by ID *(See GET /products/{productID} in API reference)*
+- Add product to cart *(See PUT /cart/{productID} in API reference)*
+- Remove product from cart *(See DELETE /cart/{productID} in API reference)*
+- Empty cart *(See DELETE /cart in API reference)*
+- View cart *(See GET /cart in API reference)*
+- Apply promo codes *(See POST /cart in API reference)*
+- Enter shipping and billing address *(See POST /cart in API reference)*
+- Apply sales tax based on shipping state *(See POST /cart in API reference)*
 - Apply discounts by product or product category
-- Checkout returns the transaction details and receipt *(See POST /cart in API guide)*
+- Checkout returns the transaction details and receipt *(See POST /cart in API reference)*
 
 Data model
 ==========
