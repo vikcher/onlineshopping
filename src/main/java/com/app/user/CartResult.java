@@ -2,6 +2,11 @@ package com.app.user;
 
 import org.json.simple.JSONArray;
 
+/**
+ * @author vikcher
+ * This is a convenience object in order to store the results of a user's cart.
+ * Enables re-use for both view cart and check-out functions.
+ */
 public class CartResult {
 
 	private double total_price;

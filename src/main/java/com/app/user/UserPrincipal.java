@@ -2,7 +2,11 @@ package com.app.user;
 
 import java.security.Principal;
 
-//Security Principal for User
+
+/**
+ * @author vikcher
+ * Security Principal object for users in the system
+ */
 public class UserPrincipal implements Principal {
 
 	private String firstName, lastName, username, email;

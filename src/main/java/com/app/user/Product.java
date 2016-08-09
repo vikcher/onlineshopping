@@ -24,35 +24,22 @@ import org.json.simple.parser.JSONParser;
 import com.app.dbconn.DbConn;
 
 
+/**
+ * @author vikcher
+ *
+ */
 @Path("products")
 public class Product {
-
-	/*
-	public String getCategoryNameFromID(int id) throws SQLException, URISyntaxException
-	{
-	       String ret = null;
-	       Connection conn = null;
-	       Statement stmt = null;
-	       String query = "Select category_name from categories where category_id = " + id;
-	       try {
-	    	   conn = DbConn.getConnection();
-	    	   stmt = conn.createStatement();
-	    	   ResultSet rs = stmt.executeQuery(query);
-	    	   while (rs.next())
-	    	   {
-	    		   ret = rs.getString("category_name");
-	    	   }
-	       } catch (SQLException e)
-	       {
-	    	   throw new SQLException();
-	       } catch (URISyntaxException e)
-	       {
-	    	   throw new URISyntaxException("","");
-	       }
-	       return ret;
-	}
-	*/
 	
+	/**
+	 * @param id
+	 * @param color
+	 * @param size
+	 * @return true if size and color are found for the particular product. Returns false if either of them are not found.
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 * @throws JSONException
+	 */
 	public static boolean validateProductColorAndSize(int id, String color, String size) throws SQLException, URISyntaxException, JSONException
 	{
 	    Connection conn = null;
@@ -99,6 +86,13 @@ public class Product {
 	    return false;
 	}
 	
+	/**
+	 * Convenience function to check if the product with given ID exists.
+	 * @param id
+	 * @return true if product exists. False if it doesn't
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	public static boolean checkIfProductExists (int id) throws URISyntaxException, SQLException 
 	{
 		Connection conn = null;
@@ -123,16 +117,25 @@ public class Product {
 	    return false;		
 	}
 	
+	
+	/**
+	 * Return the discount if applicable on a specific product by ID
+	 * @param id
+	 * @return Discount on the product if it is applicable, otherwise return 0.0
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	public static double getProductDiscount(int id) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String query = "Select discount from product_discount where product_id = "  + id;
+		String query = "Select discount from product_discount where product_id = ?";
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
 			while (rs.next())
 			{
 			    return rs.getDouble("discount");	
@@ -147,6 +150,11 @@ public class Product {
 	}
 	
 	
+	/**
+	 * Get the full product catalog or filter by passing category ID as query parameter
+	 * @param category_id
+	 * @return Success or failure JSON string if unexpected error occurs
+	 */
 	@GET
 	@Produces("application/json")
 	public String getFullProductList(@DefaultValue("-1") @QueryParam("category_id") String category_id)
@@ -184,41 +192,47 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
 		} finally {
 			try {
 				if (rs != null) rs.close();
 				if (stmt != null) stmt.close();
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured" + e.getMessage());
 			}
 		}
 		
 		ret.put("Type", "Success");
+		ret.put("Response code", "600");
 		ret.put("Number of products", count);
 		ret.put("Product list", arr);
 		return ret.toJSONString();
 	}
 	
 	
+	/**
+	 * Return specific product filtered by product ID
+	 * @param productID
+	 * @return Product details of product with specified ID
+	 */
 	@GET
 	@Produces("application/json")
 	@Path("{productID}")
-	public String getProductsByCategoryID(@PathParam("productID") String productID)
+	public String getProductByID(@PathParam("productID") String productID)
 	{
 		int id = Integer.valueOf(productID);
 		JSONObject ret = new JSONObject();
 		JSONObject newObj = null;
 		int count = 0;
-		String query = "SELECT * from products where product_id = " + id;
+		String query = "SELECT * from products where product_id = ?";
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
+			stmt = conn.prepareStatement(query);
+			rs = stmt.executeQuery();
 			while (rs.next())
 			{
 				newObj = new JSONObject();
@@ -233,7 +247,7 @@ public class Product {
 			}
 			
 		} catch (URISyntaxException | SQLException e) {
-	     	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+	     	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
 		} finally {
             try {
             	if (rs != null) rs.close();
@@ -241,7 +255,7 @@ public class Product {
             	if (conn != null) conn.close();
             } catch (SQLException e)
             {
-            	return Util.generateJSONString("Error", "An internal server error occured" + e.getMessage());
+            	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
             }
 		}
 		ret.put("Type", "Success");

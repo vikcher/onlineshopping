@@ -31,33 +31,53 @@ import com.app.dbconn.DbConn;
 @Path("cart")
 public class Cart {
 	
+	
+	/**
+	 * Validate the input parameters passed to 'AddToCart'. Checks if the product ID is valid and if passed color and size are valid strings
+	 * @param productID
+	 * @param quantity
+	 * @param color
+	 * @param size
+	 * @return Error string if input is invalid, empty string is input is valid
+	 */
 	private String validateProductCartInput (String productID, String quantity, String color, String size)
 	{
 		try {
 			if (!Product.checkIfProductExists(Integer.parseInt(productID)))
 			{
-				return Util.generateJSONString("Error", "The specified product does not exist");	
+				return Util.generateJSONString("Error", "702", "The specified product does not exist");	
 			}
 		} catch (NumberFormatException | URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		if (color.equals(""))
 		{
-			return Util.generateJSONString("Error", "Please specify the color");
+			return Util.generateJSONString("Error", "704", "Please specify the color");
 		}
-		if (quantity.equals("") || !StringUtils.isNumeric(quantity))
+		if (quantity.equals(""))
 		{
-			return Util.generateJSONString("Error", "Wrong format of parameter quantity");
+			return Util.generateJSONString("Error", "704", "Please specify the quantity");
+		}
+		if (!StringUtils.isNumeric(quantity))
+		{
+			return Util.generateJSONString("Error", "703", "Wrong format of parameter quantity");
 		}
 		if (size.equals(""))
 		{
-			return Util.generateJSONString("Error", "Please specify the size");
+			return Util.generateJSONString("Error", "704", "Please specify the size");
 		}
 		
 		return "";
 	}
 	
+	/**
+	 * Get the Cart ID associated with a user.
+	 * @param user_id
+	 * @return Cart ID if it exists, -1 if it does not.
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	private int getCartID(int user_id) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -77,10 +97,16 @@ public class Cart {
 			if (stmt != null) stmt.close();
 			if (conn != null) conn.close();
 		}
-		
 	    return -1;	
 	}
 	
+	/**
+	 * Given a state code, return the sales tax rate.
+	 * @param state - state code
+	 * @return Tax rate for the given state
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	private double getTaxForState (String state) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -104,6 +130,17 @@ public class Cart {
 		return -1.0;
 	}
 	
+	
+	/**
+	 * Check if a specified product with the same options exists in the cart. This is used to decide whether to update the same record in the cart or add a new one for insert/delete.
+	 * @param cart_id
+	 * @param product_id
+	 * @param color
+	 * @param size
+	 * @return ID in the cart_products table if an entry exists, -1 otherwise
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	private int checkIfDuplicateItemExistsInCart (int cart_id, int product_id, String color, String size) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -130,6 +167,14 @@ public class Cart {
 		return -1;
 	}
 	
+	
+	/**
+	 * Get the quantity associated with a particular product in the cart
+	 * @param cart_product_id
+	 * @return Quantity of items present in the particular cart for a particular product
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	private int getQuantity (int cart_product_id) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -153,6 +198,14 @@ public class Cart {
 		return -1;
 	}
 	
+	
+	/**
+	 * Check if cart is empty
+	 * @param cart_id
+	 * @return true if cart is empty
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	public boolean isCartEmpty(int cart_id) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -179,6 +232,16 @@ public class Cart {
 		return true;
 	}
 	
+	
+	/**
+	 * Returns the total discount for a particular product. The discount is the maximum of product or category.
+	 * @param price - product price
+	 * @param productID - product ID
+	 * @param categoryID - category ID
+	 * @return Total discount applicable for a particular product in the cart
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	public static double getTotalDiscount(double price, int productID, int categoryID) throws SQLException, URISyntaxException
 	{
 	    double productDiscount = Product.getProductDiscount(productID);
@@ -186,6 +249,14 @@ public class Cart {
 	    return (price*(double)(Math.max(productDiscount, categoryDiscount)/100));
 	}
 	
+	
+	/**
+	 * Build all the items of a particular user's cart. This is used in both viewing the cart and in returning the checkout receipt.
+	 * @param cart_id
+	 * @return CartResult object with user's cart contents and price calculations.
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	public CartResult buildCartItems(int cart_id) throws URISyntaxException, SQLException
 	{
 		CartResult ret = new CartResult();
@@ -225,6 +296,14 @@ public class Cart {
 		return ret;
 	}
 	
+	
+	/**
+	 * Return the discount percentage associated with a promo code
+	 * @param promo_code
+	 * @return discount percentage associated with a promo code
+	 * @throws URISyntaxException
+	 * @throws SQLException
+	 */
 	public double getPromoCodeDiscount(String promo_code) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -248,6 +327,11 @@ public class Cart {
 		return -1.0;	
 	}
 	
+	
+	/**
+	 * @param sc - Injected securityContext variable to get user in the session.
+	 * @return JSON object containing all the cart items and other information
+	 */
 	@GET
 	@Secured
 	@Produces("application/json")
@@ -265,14 +349,14 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		CartResult cr = null;
 		try {
 			cr = buildCartItems(cart_id);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		ret.put("Type", "Success");
@@ -285,6 +369,12 @@ public class Cart {
 		
 	}
 	
+	
+	/**
+	 * Clear the user's cart
+	 * @param sc
+	 * @return Success/failure JSON message
+	 */
 	@DELETE
 	@Secured
 	@Produces("application/json")
@@ -300,7 +390,7 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800" ,"An internal server error occured " + e.getMessage());
 		}
 		
 		try {
@@ -311,7 +401,7 @@ public class Cart {
 			stmt.executeUpdate();
 			conn.commit();
 		} catch (SQLException | URISyntaxException e){
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
@@ -319,12 +409,21 @@ public class Cart {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 			}
 		}
-	    return Util.generateJSONString("Success", "Your cart is now empty");	
+	    return Util.generateJSONString("Success", "600",  "Your cart is now empty");	
 	}
 	
+	/**
+	 * Remove specific item from cart. If the quantity specified is less than quantity in the cart, the quantity is merely decrememnted. Otherwise, the cart item is removed.
+	 * @param productID
+	 * @param color
+	 * @param quantity
+	 * @param size
+	 * @param sc
+	 * @return Success or failure JSON string.
+	 */
 	@DELETE
 	@Secured
 	@Produces("application/json")
@@ -350,33 +449,33 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		if (cart_id == -1)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured got cart id -1");
+			return Util.generateJSONString("Error", "800", "An internal server error occured got cart id -1");
 		}
 		
 		int cart_product_id = 0;
 		try {
 			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.parseInt(productID), color, size);
 		} catch (NumberFormatException | URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		int cartQuantity = 0;
 		String query = null;
 		if (cart_product_id == -1)
 		{
-			return Util.generateJSONString("Success", "Nothing to remove from cart");
+			return Util.generateJSONString("Success", "601", "Nothing to remove from cart");
 		} else {
 			try {
 				cartQuantity = getQuantity(cart_product_id);
                 conn = DbConn.getConnection();
                 conn.setAutoCommit(false);
 				if (cartQuantity < Integer.parseInt(quantity)) {
-					return Util.generateJSONString("Error", "Given quantity to delete is greater than quantity available in cart");
+					return Util.generateJSONString("Error", "703", "Given quantity to delete is greater than quantity available in cart");
 				} else if (cartQuantity == Integer.parseInt(quantity))
 				{
 					query = "DELETE from cart_products where cart_product_id = ?";
@@ -392,19 +491,19 @@ public class Cart {
 				stmt.executeUpdate();
 				conn.commit();
 			} catch (URISyntaxException | SQLException e) {
-				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 			} finally {
 				try {
 					if (stmt != null) stmt.close();
 					conn.setAutoCommit(true);
 					if (conn != null) conn.close();
 				} catch (SQLException e) {
-					return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+					return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 				}
 			}
 		}
 		
-		return Util.generateJSONString("Success", "Quantity " + Integer.parseInt(quantity) + " of product " + Integer.parseInt(productID) + " removed from cart");
+		return Util.generateJSONString("Success", "600", "Quantity " + Integer.parseInt(quantity) + " of product " + Integer.parseInt(productID) + " removed from cart");
 	}
 	
 	@PUT
@@ -431,7 +530,7 @@ public class Cart {
 		try {
 			if (!Product.validateProductColorAndSize(Integer.parseInt(productID), color, size))
 			{
-				return Util.generateJSONString("Error", "The specified color/size not found in the given product");
+				return Util.generateJSONString("Error", "702", "The specified color/size not found in the given product");
 			}
 			//return Product.validateProductColorAndSize(Integer.parseInt(productID), color, size);
 		} catch (NumberFormatException | SQLException | URISyntaxException | JSONException e1) {
@@ -444,19 +543,19 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		if (cart_id == -1)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured got cart id -1");
+			return Util.generateJSONString("Error", "800", "An internal server error occured got cart id -1");
 		}
 		
 		int cart_product_id = 0;
 		try {
 			cart_product_id = checkIfDuplicateItemExistsInCart(cart_id, Integer.valueOf(productID), color, size);
 		} catch (SQLException | URISyntaxException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		try {
 			String query = null;
@@ -481,18 +580,18 @@ public class Cart {
 			conn.commit();
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
 				conn.setAutoCommit(true);
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+				return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 			}
 		}
 		
-		return Util.generateJSONString("Success", "Item successfully added to cart");
+		return Util.generateJSONString("Success", "600", "Item successfully added to cart");
 	}
 	
 	/**
@@ -500,7 +599,7 @@ public class Cart {
 	 * @param state_code
 	 * @param promo_code
 	 * @param sc
-	 * @return
+	 * @return JSON string containing the checkout details and final price.
 	 */
 	@POST
 	@Secured
@@ -530,35 +629,36 @@ public class Cart {
 			cart_id = getCartID(user_id);
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		
 		try {
 			if (isCartEmpty(cart_id))
 			{
-				return Util.generateJSONString("Error", "No items in cart to checkout");
+				return Util.generateJSONString("Success", "601", "No items in cart to checkout");
 			}
 		} catch (URISyntaxException | SQLException e1) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e1.getMessage());	
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e1.getMessage());	
 		}
+		
 		if (shipping_addr == "")
 		{
-			return Util.generateJSONString("Error", "Shipping address is required");
+			return Util.generateJSONString("Error", "704", "Shipping address is required");
 		}
 		
 		if (state_code == "")
 		{
-			return Util.generateJSONString("Error", "Shipping state is required");
+			return Util.generateJSONString("Error", "704", "Shipping state is required");
 		}
 		
 		try {
 			sales_tax_percentage = getTaxForState(state_code);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		if (sales_tax_percentage == -1.0)
 		{
-			return Util.generateJSONString("Error", "The state code you entered is invalid. Please try again");
+			return Util.generateJSONString("Error", "703", "The state code you entered is invalid. Please try again");
 		}
 		
 		if(!promo_code.equals(""))
@@ -571,7 +671,7 @@ public class Cart {
 			}
 		    if (promo_code_discount_percentage == -1.0)
 		    {
-		    	return Util.generateJSONString("Error", "The promo code you entered is invalid. Please try again");	
+		    	return Util.generateJSONString("Error", "703", "The promo code you entered is invalid. Please try again");	
 		    }
 		}
 		
@@ -579,7 +679,7 @@ public class Cart {
 		try {
 			cr = buildCartItems(cart_id);
 		} catch (URISyntaxException | SQLException e) {
-			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			return Util.generateJSONString("Error", "800", "An internal server error occured " + e.getMessage());
 		}
 		ret.put("Type", "Success");
 		ret.put("Shipping address", shipping_addr);
