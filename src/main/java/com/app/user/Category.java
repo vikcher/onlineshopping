@@ -46,7 +46,7 @@ public class Category {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String query = "Select discount from category_discount where product_id = "  + id;
+		String query = "Select discount from category_discount where category_id = "  + id;
 	    try {
 	    	conn = DbConn.getConnection();
 	    	stmt = conn.createStatement();
