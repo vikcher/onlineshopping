@@ -114,7 +114,7 @@ public class Cart {
 		{
 			return Util.generateJSONString("Error", "Please specify the color");
 		}
-		if (quantity.equals("") || StringUtils.isNumeric(quantity))
+		if (quantity.equals("") || !StringUtils.isNumeric(quantity))
 		{
 			return Util.generateJSONString("Error", "Wrong format of parameter quantity");
 		}
