@@ -194,6 +194,7 @@ public class Cart {
 		}
 		
 		ret.put("Type", "Success");
+		ret.put("Items", objects);
 		ret.put("Total number of items", total_num_items);
 		ret.put("Total price before discount", total_price);
 		ret.put("Total savings", total_savings);
