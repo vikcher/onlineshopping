@@ -121,83 +121,12 @@ public class Util {
 		return hash.toString();
 	}
 	
-	public static String generateJSONString (String type, String message)
+	public static String generateJSONString (String type, String responseCode, String message)
 	{
 		 JSONObject obj = new JSONObject();
 		 obj.put("Type", type);
+		 obj.put("Response Code", responseCode);
 		 obj.put("Message", message);
 		 return obj.toJSONString();
 	}
-	
-	/*
-	public static boolean authenticateUser(String uname, String password) throws NoSuchAlgorithmException, SQLException, URISyntaxException
-	{
-		String query = "SELECT password from users where username = \'"+ uname +"\'";
-		String retrievedPassword = null;
-    	ResultSet rs = null;
-    	try {
-    		rs = executeQuery(query);
-    		while (rs.next())
-    		{
-    			retrievedPassword = rs.getString("password");
-    		}
-    	} finally {
-    		if (rs != null) rs.close();
-    	}
-    	
-		String saltedPassword = Util.SALT + password;
-		String hashedPassword;
-		hashedPassword = Util.generateHash(saltedPassword);
-		
-		if (hashedPassword.equals(retrievedPassword))
-		{
-			return true;
-		}	
-	    return false;
-	}
-	*/
-	
-	/*
-	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
-	{
-		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
-    	ResultSet rs = null;
-    	try {
-    		rs = executeQuery(query);
-    		while (rs.next())
-    		{
-    			if (rs.getInt("total") > 0)
-    			{
-    				return true;
-    			}
-    		}
-    	} finally {
-    		if (rs != null) rs.close();
-    	}
-		return false;
-	}*/
-	
-	/*
-	 * Function to get User ID. Returns -1 if user does not exist.
-	 */
-	/*
-	public static int getUserID(String uname) throws SQLException, URISyntaxException
-	{
-		int id = -1;
-	
-		String query = "SELECT id from users where username = \'"+ uname +"\'";
-		ResultSet rs = null;
-		try {
-			rs = executeQuery(query);
-			while (rs.next())
-			{
-				id = rs.getInt("id");
-
-			}
-		} finally {
-			if (rs != null) rs.close();
-		}
-		return id;
-	}*/
-
 }

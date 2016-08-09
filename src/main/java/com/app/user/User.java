@@ -30,45 +30,37 @@ import com.app.dbconn.DbConn;
 /**
  * Root resource (exposed at "myresource" path)
  */
+/**
+ * @author vikcher
+ *
+ */
 @Path("users")
 public class User {
 	
 	
 	public static final String SALT = "ramdom-salt-string";
-
-	/*
-	private static String generateHash(String input) throws NoSuchAlgorithmException {
-		StringBuilder hash = new StringBuilder();
-
-		try {
-			MessageDigest sha = MessageDigest.getInstance("SHA-1");
-			byte[] hashedBytes = sha.digest(input.getBytes());
-			char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-					'a', 'b', 'c', 'd', 'e', 'f' };
-			for (int idx = 0; idx < hashedBytes.length; ++idx) {
-				byte b = hashedBytes[idx];
-				hash.append(digits[(b & 0xf0) >> 4]);
-				hash.append(digits[b & 0x0f]);
-			}
-		} catch (NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException();
-		}
-
-		return hash.toString();
-	}
-	*/
 	
+	
+	/**
+	 * @param uname
+	 * @param password
+	 * @return True if user credentials are correct. False if user credentials provided are not valid.
+	 * @throws NoSuchAlgorithmException
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	public static boolean authenticateUser(String uname, String password) throws NoSuchAlgorithmException, SQLException, URISyntaxException
 	{
 		String query = null;
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		query = "SELECT password from users where username = \'"+ uname +"\'";
+		query = "SELECT password from users where username = ?";
 		String retrievedPassword = null;
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, uname);
     		rs = stmt.executeQuery(query);
     		while (rs.next())
     		{
@@ -82,31 +74,32 @@ public class User {
 		
 		String saltedPassword = Util.SALT + password;
 		String hashedPassword;
-		try {
-			hashedPassword = Util.generateHash(saltedPassword);
-		} catch (NoSuchAlgorithmException e) {
-			throw new NoSuchAlgorithmException();
-		}
+		hashedPassword = Util.generateHash(saltedPassword);
 		
 		if (hashedPassword.equals(retrievedPassword))
 		{
 			return true;
 		}	
-		
 	    return false;
 	}
 	
 	
-	
+	/**
+	 * @param uname
+	 * @return True if user already exists, False if user does not exist
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	public static boolean checkIfUserExists (String uname) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String query = "SELECT COUNT(*) AS total from users where username = \'"+ uname +"\'";
+		String query = "SELECT COUNT(*) AS total from users where username = ?";
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, uname);
     		rs = stmt.executeQuery(query);
     		while (rs.next())
     		{
@@ -124,16 +117,24 @@ public class User {
 		return false;
 	}
 	
+	
+	/**
+	 * @param uname
+	 * @return Returns User ID corresponding to the Username
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	public static int getUserID(String uname) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		int id = -1;
 		ResultSet rs = null;
-		String query = "SELECT id from users where username = \'"+ uname +"\'";
+		String query = "SELECT id from users where username = ?";
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, uname);
     		rs = stmt.executeQuery(query);
     		while (rs.next())
     		{
@@ -148,17 +149,16 @@ public class User {
 		
 		return id;
 	}
-	
-	
-	/*
-	public static String generateJSONString (String type, String message)
-	{
-		 JSONObject obj = new JSONObject();
-		 obj.put("Type", type);
-		 obj.put("Message", message);
-		 return obj.toJSONString();
-	}*/
 
+	/**
+	 * Function to register a new User. The URL for this is POST /users
+	 * @param uname
+	 * @param password
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @return Error JSON string or Success JSON string if user is successfully added.
+	 */
 	@POST
 	@Produces("application/json")
 	@Consumes("application/x-www-form-urlencoded")
@@ -178,11 +178,11 @@ public class User {
 		try {
 			if(checkIfUserExists(uname))
 			{
-				return Util.generateJSONString("Error", "Username \"" + uname + "\" already exists. Please choose another username");
+				return Util.generateJSONString("Error", "701", "Username \"" + uname + "\" already exists. Please choose another username");
 			}
 		} catch (SQLException | URISyntaxException e1) {
 			// TODO Auto-generated catch block
-			return Util.generateJSONString ("Error", "An internal error occured");
+			return Util.generateJSONString ("Error", "800", "An internal error occured");
 		}
 		
 		String hashedPassword;
@@ -190,7 +190,7 @@ public class User {
 			hashedPassword = Util.generateHash(Util.SALT + password);
 		} catch (NoSuchAlgorithmException e)
 		{
-			return Util.generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "800", "An internal error occured");
 		}
 		
 		try {
@@ -209,7 +209,7 @@ public class User {
     		conn.commit();
 		} catch (Exception e)
 		{
-			return Util.generateJSONString("Error", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+			return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
 		} finally {
 			try {
 				if (rs != null) rs.close();
@@ -218,7 +218,7 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+				return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
 			}
 		}
 		
@@ -238,21 +238,21 @@ public class User {
 				conn.setAutoCommit(true);
 				if (conn != null) conn.close();
 			} catch (SQLException e) {
-				return Util.generateJSONString("Error", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
+				return Util.generateJSONString("Error", "800", "An internal error occured " + e.getMessage() + String.valueOf(user_id));
 			}
 		}
 		
 		
 		/* Success! Added the user to users database */
-		return Util.generateJSONString("Success", "Successfully added user " + uname);
+		return Util.generateJSONString("Success", "600", "Successfully added user " + uname);
 	}
 	
-	/*
-	 * Method handling HTTP DELETE requests for users.
-	 * The purpose is to delete user accounts. This operation will succeed only if the correct
-	 * password is provided.
-	 * 
-	 * @return JSON with response type (error/success) and message 
+
+	/**
+	 * This is the DELETE request for users. Path is DELETE /users
+	 * The logged-in user's account is deleted and the corresponding cart is also deleted.
+	 * @param sc
+	 * @return Success or Error JSON string depending on the result.
 	 */
 	@DELETE
 	@Produces("application/json")
@@ -274,14 +274,13 @@ public class User {
 			rs = stmt.executeQuery();
 			while (rs.next())
 			{
-				/* If a user is already found, return a JSON error string*/
 				if (rs.getInt("total") == 0)
 				{
-					return Util.generateJSONString("Error", "Username \"" + uname + "\" does not exist. Cannot delete");
+					return Util.generateJSONString("Error", "702", "Username \"" + uname + "\" does not exist. Cannot delete");
 				}
 			}
 		} catch (SQLException | URISyntaxException e) {
-			return Util.generateJSONString ("Error", "An internal error occured");
+			return Util.generateJSONString ("Error", "800", "An internal error occured");
 		} finally {
 			try {
 				if (rs != null) rs.close();
@@ -289,7 +288,7 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString ("Error", "An internal error occured" + e.getMessage());
+				return Util.generateJSONString ("Error", "800", "An internal error occured" + e.getMessage());
 			}
 		}
 		
@@ -302,7 +301,7 @@ public class User {
 			conn.commit();
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "800", "An internal error occured");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
@@ -310,7 +309,7 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "An internal error occured");	
+				return Util.generateJSONString("Error", "800", "An internal error occured");	
 			}
 		}
 		
@@ -323,7 +322,7 @@ public class User {
 			conn.commit();
 		} catch (SQLException | URISyntaxException e)
 		{
-			return Util.generateJSONString("Error", "An internal error occured");
+			return Util.generateJSONString("Error", "800", "An internal error occured");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
@@ -331,11 +330,11 @@ public class User {
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
-				return Util.generateJSONString("Error", "An internal error occured");	
+				return Util.generateJSONString("Error", "800", "An internal error occured");	
 			}
 		}
 		
 		/* Success! Deleted the user from users database */
-		return Util.generateJSONString("Success", "Successfully removed user " + uname);
+		return Util.generateJSONString("Success", "600", "Successfully removed user " + uname);
 	}
 }

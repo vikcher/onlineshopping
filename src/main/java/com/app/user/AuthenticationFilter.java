@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,18 +15,24 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 
 import com.app.dbconn.DbConn;
 
+/**
+ * @author vikcher
+ * AuthenticationFilter is used to filter requests to all the APIs which need the user to be logged in.
+ */
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
 	
+	/* Filters incoming requests */
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		
@@ -44,32 +51,38 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		} catch (SQLException | URISyntaxException e) {
 			// TODO Auto-generated catch block
 			requestContext.abortWith(
-			        Response.status(Response.Status.INTERNAL_SERVER_ERROR).build());
+			        Response.ok(Util.generateJSONString("Error", "800", "An internal server error occured"), MediaType.APPLICATION_JSON).build());
 		}
 		
 		if (user == null)
 		{
 			requestContext.abortWith(
-			        Response.status(Response.Status.UNAUTHORIZED).build());
+			        Response.ok(Util.generateJSONString("Error", "700", "Not authorized"), MediaType.APPLICATION_JSON).build());
 		}
 		
 		requestContext.setSecurityContext(new UserSecurityContext(user));
     }
 	
 	
+	/**
+	 * @param token
+	 * @return User corresponding to the token if the token is valid, null otherwise
+	 * @throws SQLException
+	 * @throws URISyntaxException
+	 */
 	private UserPrincipal validateToken(String token) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		UserPrincipal authenticatedUser = null;
 	    int count = 0;
-		/* Retrieve User ID count */
-		String query = "SELECT COUNT(*) AS total from sessions where token = \'"+ token +"\'";
+		String query = "SELECT COUNT(*) AS total from sessions where token = ?";
 		ResultSet rs = null;
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-    	    rs = stmt.executeQuery(query);
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, token);
+    	    rs = stmt.executeQuery();
      	    while (rs.next())
     	    {
     		    count = rs.getInt("total");
@@ -85,10 +98,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		}
 		
 		
-		query = "SELECT * from users where id = (SELECT user_id from sessions where token = \'" + token + "\')";
+		query = "SELECT * from users where id = (SELECT user_id from sessions where token = ?)";
 		try{
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, token);
 			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
