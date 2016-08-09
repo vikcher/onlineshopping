@@ -16,8 +16,10 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
+import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.app.dbconn.DbConn;
 
@@ -50,6 +52,52 @@ public class Product {
 	       return ret;
 	}
 	*/
+	
+	public static boolean validateProductColorAndSize(int id, String color, String size) throws SQLException, URISyntaxException, JSONException
+	{
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+	    String options = null;
+	    boolean colorFound = false;
+	    boolean sizeFound = false;
+	    try {
+	    	conn = DbConn.getConnection();
+	    	stmt = conn.prepareStatement("SELECT options from product where product_id = ?");
+	    	stmt.setInt(1, id);
+	    	rs = stmt.executeQuery();
+	    	while (rs.next())
+	    	{
+	    		options = rs.getString("options");
+	    	}
+	    } finally {
+	    	if (rs != null) rs.close();
+	    	if (stmt != null) stmt.close();
+	    	if (conn != null) conn.close();
+	    }
+	    
+	    org.json.JSONObject obj = new org.json.JSONObject(options);
+	    org.json.JSONArray colors = obj.getJSONArray("colors");
+	    org.json.JSONArray sizes = obj.getJSONArray("sizes");
+	    for (int i = 0; i < colors.length(); i++)
+	    {
+	    	if (color.equals(colors.get(i)))
+	    		colorFound = true;
+	    }
+	    
+	    for (int i = 0; i < sizes.length(); i++)
+	    {
+	    	if (size.equals(sizes.get(i)))
+	    		sizeFound = true;
+	    }
+	    
+	    if (colorFound == true && sizeFound == true)
+	    {
+	    	return true;
+	    }
+	    
+	    return false;
+	}
 	
 	public static boolean checkIfProductExists (int id) throws URISyntaxException, SQLException 
 	{

@@ -22,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
@@ -277,6 +278,16 @@ public class Cart {
 		if (!validation.equals(""))
 		{
 			return validation;
+		}
+		
+		try {
+			if (!Product.validateProductColorAndSize(Integer.parseInt(productID), color, size))
+			{
+				return Util.generateJSONString("Error", "The specified color/size not found in the given product");
+			}
+		} catch (NumberFormatException | SQLException | URISyntaxException | JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
 		int cart_id = 0;
