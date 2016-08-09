@@ -281,12 +281,11 @@ public class Cart {
 		}
 		
 		try {
-			/*
 			if (!Product.validateProductColorAndSize(Integer.parseInt(productID), color, size))
 			{
 				return Util.generateJSONString("Error", "The specified color/size not found in the given product");
-			}*/
-			return Product.validateProductColorAndSize(Integer.parseInt(productID), color, size);
+			}
+			//return Product.validateProductColorAndSize(Integer.parseInt(productID), color, size);
 		} catch (NumberFormatException | SQLException | URISyntaxException | JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

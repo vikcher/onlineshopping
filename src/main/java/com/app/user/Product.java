@@ -53,13 +53,12 @@ public class Product {
 	}
 	*/
 	
-	public static String validateProductColorAndSize(int id, String color, String size) throws SQLException, URISyntaxException, JSONException
+	public static boolean validateProductColorAndSize(int id, String color, String size) throws SQLException, URISyntaxException, JSONException
 	{
 	    Connection conn = null;
 	    PreparedStatement stmt = null;
 	    ResultSet rs = null;
 	    String options = null;
-	    StringBuilder testRet = new StringBuilder();
 	    boolean colorFound = false;
 	    boolean sizeFound = false;
 	    try {
@@ -82,20 +81,22 @@ public class Product {
 	    org.json.JSONArray sizes = obj.getJSONArray("sizes");
 	    for (int i = 0; i < colors.length(); i++)
 	    {
-	    	testRet.append(colors.get(i));
 	    	if (color.equals(colors.get(i)))
 	    		colorFound = true;
 	    }
 	    
 	    for (int i = 0; i < sizes.length(); i++)
 	    {
-	    	testRet.append(sizes.get(i));
 	    	if (size.equals(sizes.get(i)))
 	    		sizeFound = true;
 	    }
 	    
+	    if (sizeFound == true && colorFound == true)
+	    {
+	    	return true;
+	    }
 	    
-	    return testRet.toString();
+	    return false;
 	}
 	
 	public static boolean checkIfProductExists (int id) throws URISyntaxException, SQLException 
