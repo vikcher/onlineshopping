@@ -174,7 +174,7 @@ public class Cart {
 				newObject.put("Product description", rs.getString("product_description"));
 				newObject.put("Product price", (double)rs.getDouble("product_price")*rs.getInt("quantity"));
 				total_price += (double)rs.getDouble("product_price")*rs.getInt("quantity");
-				double discount = getTotalDiscount(rs.getInt("product_price"), rs.getInt("product_id"), rs.getInt("category_id"));
+				double discount = getTotalDiscount(rs.getInt("product_price"), rs.getInt("pid"), rs.getInt("category_id"));
 				newObject.put("Discount", discount);
 				total_savings += discount;
 				total_num_items += rs.getInt("quantity");
@@ -183,6 +183,14 @@ public class Cart {
 		} catch (SQLException | URISyntaxException e)
 		{
 			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (stmt != null) stmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			}
 		}
 		
 		ret.put("Type", "Success");
