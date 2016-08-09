@@ -139,6 +139,46 @@ public class Cart {
 	@DELETE
 	@Secured
 	@Produces("application/json")
+	public String emptyCart(@Context SecurityContext sc)
+	{
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
+		int user_id = user.getID();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		int cart_id = 0;
+		try {
+			cart_id = getCartID(user_id);
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		try {
+			conn = DbConn.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("DELETE from cart_products where cart_id = ?");
+			stmt.setInt(1, cart_id);
+			stmt.executeUpdate();
+			conn.commit();
+		} catch (SQLException | URISyntaxException e){
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
+			} catch (SQLException e)
+			{
+				return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+			}
+		}
+	    return Util.generateJSONString("Success", "Your cart is now empty");	
+	}
+	
+	@DELETE
+	@Secured
+	@Produces("application/json")
 	@Path("{product_id}")
 	public String removeFromCart(@PathParam("product_id") String productID,
             					@DefaultValue ("") @QueryParam("color") String color,
