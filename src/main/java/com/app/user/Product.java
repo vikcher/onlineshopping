@@ -232,6 +232,7 @@ public class Product {
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, Integer.parseInt(productID));
 			rs = stmt.executeQuery();
 			while (rs.next())
 			{
@@ -241,12 +242,14 @@ public class Product {
 				newObj.put("Category", Category.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
-				newObj.put("options", rs.getString("options"));
+				//newObj.put("options", rs.getString("options"));
+				org.json.JSONObject options = new org.json.JSONObject(rs.getString("options"));
+				newObj.put("options", options);
 				newObj.put("File URL", rs.getString("img_url"));
 				newObj.put("Discount", getProductDiscount(rs.getInt("product_id")));
 			}
 			
-		} catch (URISyntaxException | SQLException e) {
+		} catch (URISyntaxException | SQLException | JSONException e) {
 	     	return Util.generateJSONString("Error", "800",  "An internal server error occured" + e.getMessage());
 		} finally {
             try {

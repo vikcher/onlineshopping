@@ -40,7 +40,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		String authorizationHeader = 
 	            requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 		
-		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+		if (authorizationHeader == null || authorizationHeader.equals("") || !authorizationHeader.startsWith("Bearer ")) {
 			requestContext.abortWith(
 			        Response.ok(Util.generateJSONString("Error", "700", "Not authorized"), MediaType.APPLICATION_JSON).build());
         }
