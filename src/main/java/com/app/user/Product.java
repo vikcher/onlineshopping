@@ -229,6 +229,16 @@ public class Product {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		
+		try {
+			if (!checkIfProductExists(Integer.parseInt(productID)))
+			{
+				return Util.generateJSONString("Error", "702",  "No product with given ID exists");
+			}
+		} catch (NumberFormatException | URISyntaxException | SQLException e1) {
+			return Util.generateJSONString("Error", "800",  "An internal server error occured" + e1.getMessage());
+		}
+		
 		try {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
@@ -242,7 +252,6 @@ public class Product {
 				newObj.put("Category", Category.getCategoryNameFromID(rs.getInt("category_id")));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
-				//newObj.put("options", rs.getString("options"));
 				org.json.JSONObject options = new org.json.JSONObject(rs.getString("options"));
 				newObj.put("options", options);
 				newObj.put("File URL", rs.getString("img_url"));
