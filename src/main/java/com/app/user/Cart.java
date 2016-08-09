@@ -150,7 +150,7 @@ public class Cart {
 		int user_id = user.getID();
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		String validation = validateProductCartInput(productID, color, quantity,size);
+		String validation = validateProductCartInput(productID, quantity, color,size);
 		if (!validation.equals(""))
 		{
 			return validation;
@@ -233,7 +233,7 @@ public class Cart {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		
-		String validation = validateProductCartInput(productID, color, quantity,size);
+		String validation = validateProductCartInput(productID, quantity, color,size);
 		if (!validation.equals(""))
 		{
 			return validation;
