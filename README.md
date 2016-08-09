@@ -86,11 +86,11 @@ Response codes
     - 800 : Internal system error
 - APIs needing authorization
   Some APIs need the user to be logged in. **When the user is created using POST /user (See API reference), the Response Header returns an Authentication token. This token should be added to the Request 'Authorization' header with the prefix 'Bearer'. For instance, if the token is '38sdagks7aoydyg2', the Authorization header should contain 'Bearer 38sdagks7aoydyg2'**. The list of APIs needing token-based authorization are:
-  - DELETE /user
-  - DELETE /sessions
-  - GET /cart
-  - PUT /cart
-  - POST /cart
+    - DELETE /user
+    - DELETE /sessions
+    - GET /cart
+    - PUT /cart
+    - POST /cart
 
 API Reference
 ==============
