@@ -123,7 +123,7 @@ public class Product {
 	    return false;		
 	}
 	
-	public String getProductDiscount(int id) throws SQLException, URISyntaxException
+	public static double getProductDiscount(int id) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
 		Statement stmt = null;
@@ -135,7 +135,7 @@ public class Product {
 			rs = stmt.executeQuery(query);
 			while (rs.next())
 			{
-			    return String.valueOf(rs.getFloat("discount")) + "%";	
+			    return rs.getDouble("discount");	
 			}
 		} finally {
 			if (rs != null) rs.close();
@@ -143,7 +143,7 @@ public class Product {
 			if (conn != null) conn.close();
 		}
 		
-	    return "No discount on this product";	
+	    return 0.0;	
 	}
 	
 	

@@ -41,7 +41,7 @@ public class Category {
 	       return ret;
 	}
 
-	public static String getCategoryDiscount(int id) throws SQLException, URISyntaxException
+	public static double getCategoryDiscount(int id) throws SQLException, URISyntaxException
 	{
 		Connection conn = null;
 		Statement stmt = null;
@@ -53,14 +53,14 @@ public class Category {
 	        rs = stmt.executeQuery(query);
 		    while (rs.next())
 		    {
-			    return String.valueOf(rs.getFloat("discount"));	
+			    return rs.getDouble("discount");	
 		    }
 	    } finally {
 	    	if (rs != null) rs.close();
 	    	if (stmt != null) stmt.close();
 	    	if (conn != null) conn.close();
 	    }
-	    return "No discount on this category";	
+	    return 0.0;	
 	}
 	
 	

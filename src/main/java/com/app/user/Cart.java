@@ -23,6 +23,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
@@ -129,12 +130,68 @@ public class Cart {
 		return -1;
 	}
 	
+	public static double getTotalDiscount(double price, int productID, int categoryID) throws SQLException, URISyntaxException
+	{
+	    double productDiscount = Product.getProductDiscount(productID);
+	    double categoryDiscount = Category.getCategoryDiscount(categoryID);
+	    return (price*Math.max(productDiscount, categoryDiscount));
+	}
+	
 	@GET
 	@Secured
 	@Produces("application/json")
-	public String viewCart()
+	public String viewCart(@Context SecurityContext sc)
 	{
-		return "";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
+		int user_id = user.getID();
+		int total_num_items = 0;
+		double total_price = 0.0;
+		double total_savings = 0.0;
+		JSONObject ret = new JSONObject();
+		JSONArray objects = new JSONArray();
+		
+		int cart_id = 0;
+		try {
+			cart_id = getCartID(user_id);
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT size, color, quantity, products.product_id AS pid, product_description, product_name, product_price, category_name from products, cart_products, categories where cart_products.product_id = products.product_id and categories.category_id = products.category_id and cart_id = ?");
+			stmt.setInt(1, cart_id);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				JSONObject newObject = new JSONObject();
+				newObject.put("Product ID", rs.getInt("pid"));
+				newObject.put("Product name", rs.getString("product_name"));
+				newObject.put("Product description", rs.getString("product_description"));
+				newObject.put("Product price", (double)rs.getDouble("product_price")*rs.getInt("quantity"));
+				total_price += (double)rs.getDouble("product_price")*rs.getInt("quantity");
+				double discount = getTotalDiscount(rs.getInt("product_price"), rs.getInt("product_id"), rs.getInt("category_id"));
+				newObject.put("Discount", discount);
+				total_savings += discount;
+				total_num_items += rs.getInt("quantity");
+				objects.add(newObject);
+			}
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		ret.put("Type", "Success");
+		ret.put("Total number of items", total_num_items);
+		ret.put("Total price before discount", total_price);
+		ret.put("Total savings", total_savings);
+		ret.put("Total price after discount", total_price - total_savings);
+		return ret.toJSONString();
+		
 	}
 	
 	@DELETE
