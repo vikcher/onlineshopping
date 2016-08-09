@@ -81,6 +81,29 @@ public class Cart {
 	    return -1;	
 	}
 	
+	private double getTaxForState (String state) throws URISyntaxException, SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT * from sales_tax where state_code = ?");
+			stmt.setString(1, state);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				return rs.getDouble("sales_tax_percentage");
+			}
+		} finally {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		
+		return -1.0;
+	}
+	
 	private int checkIfDuplicateItemExistsInCart (int cart_id, int product_id, String color, String size) throws URISyntaxException, SQLException
 	{
 		Connection conn = null;
@@ -174,6 +197,29 @@ public class Cart {
 		
 		ret.setItems(objects);
 		return ret;
+	}
+	
+	public double getPromoCodeDiscount(String promo_code) throws URISyntaxException, SQLException
+	{
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DbConn.getConnection();
+			stmt = conn.prepareStatement("SELECT * from promo_codes where promo_code = ?");
+			stmt.setString(1, promo_code);
+			rs = stmt.executeQuery();
+			while (rs.next())
+			{
+				return rs.getDouble("discount");
+			}
+		} finally {
+			if (rs != null) rs.close();
+			if (stmt != null) stmt.close();
+			if (conn != null) conn.close();
+		}
+		
+		return -1.0;	
 	}
 	
 	@GET
@@ -423,15 +469,86 @@ public class Cart {
 		return Util.generateJSONString("Success", "Item successfully added to cart");
 	}
 	
+	/**
+	 * @param shipping_addr
+	 * @param state_code
+	 * @param promo_code
+	 * @param sc
+	 * @return
+	 */
 	@POST
 	@Secured
 	@Produces("application/json")
 	@Consumes("application/x-www-form-urlencoded")
 	public String checkOut(@FormParam("shipping_addr") String shipping_addr,
 			               @FormParam("state") String state_code,
-			               @FormParam("promo_code") String promo_code)
+			               @DefaultValue ("") @FormParam("promo_code") String promo_code,
+			               @Context SecurityContext sc)
 	{
-		return "";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
+		int user_id = user.getID();
+		JSONObject ret = new JSONObject();
+		double sales_tax_percentage = 0.0;
+		double promo_code_discount_percentage = 0.0;
+		double promo_code_discount = 0.0;
+		double after_promo_code_discount = 0.0;
+		double sales_tax_amount = 0.0;
+		double after_tax_total = 0.0;
+		
+		int cart_id = 0;
+		try {
+			cart_id = getCartID(user_id);
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		
+		CartResult cr = null;
+		try {
+			cr = buildCartItems(cart_id);
+		} catch (URISyntaxException | SQLException e) {
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		ret.put("Type", "Success");
+		ret.put("Shipping address", shipping_addr);
+		ret.put("Tax state", state_code);
+		ret.put("Items", cr.getItems());
+		ret.put("Total number of items", cr.getTotal_items());
+		ret.put("Total price before discount", cr.getTotal_price());
+		ret.put("Total savings", cr.getTotal_discount());
+		ret.put("Total price after discount", cr.getTotal_price() - cr.getTotal_discount());
+		if(!promo_code.equals(""))
+		{
+		    try {
+				promo_code_discount_percentage = getPromoCodeDiscount(promo_code);
+			} catch (URISyntaxException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    if (promo_code_discount_percentage == -1.0)
+		    {
+		    	return Util.generateJSONString("Error", "The promo code you entered is invalid. Please try again");	
+		    }
+		}
+		ret.put("Promo code discount percentage", promo_code_discount_percentage + "%");
+		promo_code_discount = (cr.getTotal_price() - cr.getTotal_discount())*(promo_code_discount_percentage/100);
+		ret.put("Promo code discount", promo_code_discount);
+		after_promo_code_discount = cr.getTotal_price() - cr.getTotal_discount() - promo_code_discount;
+		ret.put("Total after promo code discount", after_promo_code_discount);
+		try {
+			sales_tax_percentage = getTaxForState(state_code);
+		} catch (URISyntaxException | SQLException e) {
+			return Util.generateJSONString("Error", "An internal server error occured " + e.getMessage());
+		}
+		ret.put("Sales tax percentage", sales_tax_percentage + "%");
+		sales_tax_amount = after_promo_code_discount*(sales_tax_percentage/100);
+		ret.put("Sales tax amount", sales_tax_amount);
+		ret.put("Total after sales tax", sales_tax_amount + after_promo_code_discount);
+		emptyCart(sc);
+		return ret.toJSONString();
 	}
 	
 }
