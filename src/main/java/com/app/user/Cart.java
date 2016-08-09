@@ -163,7 +163,7 @@ public class Cart {
 		
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.prepareStatement("SELECT size, color, quantity, products.product_id AS pid, product_description, product_name, product_price, category_name from products, cart_products, categories where cart_products.product_id = products.product_id and categories.category_id = products.category_id and cart_id = ?");
+			stmt = conn.prepareStatement("SELECT size, color, quantity, products.product_id AS pid, product_description, product_name, product_price, category_name, products.category_id as cid from products, cart_products, categories where cart_products.product_id = products.product_id and categories.category_id = products.category_id and cart_id = ?");
 			stmt.setInt(1, cart_id);
 			rs = stmt.executeQuery();
 			while (rs.next())
@@ -173,8 +173,8 @@ public class Cart {
 				newObject.put("Product name", rs.getString("product_name"));
 				newObject.put("Product description", rs.getString("product_description"));
 				newObject.put("Product price", (double)rs.getDouble("product_price")*rs.getInt("quantity"));
-				total_price += (double)rs.getDouble("product_price")*rs.getInt("quantity");
-				double discount = getTotalDiscount(rs.getInt("product_price"), rs.getInt("pid"), rs.getInt("category_id"));
+				total_price += (double)(rs.getDouble("product_price")*rs.getInt("quantity"));
+				double discount = getTotalDiscount((double)(rs.getDouble("product_price")*rs.getInt("quantity")), rs.getInt("pid"), rs.getInt("cid"));
 				newObject.put("Discount", discount);
 				total_savings += discount;
 				total_num_items += rs.getInt("quantity");
