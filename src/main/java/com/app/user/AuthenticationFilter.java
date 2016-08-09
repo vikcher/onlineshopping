@@ -103,7 +103,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, token);
-			rs = stmt.executeQuery(query);
+			rs = stmt.executeQuery();
 			while (rs.next())
 			{
 				authenticatedUser = new UserPrincipal();

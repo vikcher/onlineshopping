@@ -61,7 +61,7 @@ public class User {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, uname);
-    		rs = stmt.executeQuery(query);
+    		rs = stmt.executeQuery();
     		while (rs.next())
     		{
     			retrievedPassword = rs.getString("password");
@@ -100,7 +100,7 @@ public class User {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, uname);
-    		rs = stmt.executeQuery(query);
+    		rs = stmt.executeQuery();
     		while (rs.next())
     		{
     			if (rs.getInt("total") > 0)
@@ -135,7 +135,7 @@ public class User {
 			conn = DbConn.getConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, uname);
-    		rs = stmt.executeQuery(query);
+    		rs = stmt.executeQuery();
     		while (rs.next())
     		{
     			id = rs.getInt("id");
