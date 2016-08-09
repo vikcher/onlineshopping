@@ -264,15 +264,14 @@ public class User {
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int id = user.getID();
 		String uname = user.getUserName();
-		/* Find if the username exists*/
-		String query = "SELECT COUNT(*) AS total from users where id = \'"+ id +"\'";
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(query);
+			stmt = conn.prepareStatement("SELECT COUNT(*) AS total from users where id = ?");
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
 			while (rs.next())
 			{
 				/* If a user is already found, return a JSON error string*/
@@ -294,21 +293,41 @@ public class User {
 			}
 		}
 		
-		
-		/* 
-		 * Password is correct, proceed to delete
-		 */
-		query = "DELETE FROM users where id = \'" + id + "\'";
 		try {
 			conn = DbConn.getConnection();
-			stmt = conn.createStatement();
-			stmt.executeUpdate(query);
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("DELETE FROM users where id = ?");
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			conn.commit();
 		} catch (SQLException | URISyntaxException e)
 		{
 			return Util.generateJSONString("Error", "An internal error occured");
 		} finally {
 			try {
 				if (stmt != null) stmt.close();
+				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
+			} catch (SQLException e)
+			{
+				return Util.generateJSONString("Error", "An internal error occured");	
+			}
+		}
+		
+		try {
+			conn = DbConn.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("DELETE FROM cart where user_id = ?");
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+			conn.commit();
+		} catch (SQLException | URISyntaxException e)
+		{
+			return Util.generateJSONString("Error", "An internal error occured");
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				conn.setAutoCommit(true);
 				if (conn != null) conn.close();
 			} catch (SQLException e)
 			{
