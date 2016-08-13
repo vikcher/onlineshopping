@@ -28,13 +28,10 @@ import org.json.simple.JSONObject;
 import com.app.dbconn.DbConn;
 
 /**
- * Root resource (exposed at "myresource" path)
- */
-/**
  * @author vikcher
  *
  */
-@Path("users")
+@Path("rest/users")
 public class User {
 	
 	
