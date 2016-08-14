@@ -28,7 +28,7 @@
 							class="glyphicon glyphicon-shopping-cart"></span> Cart </a></li>
 				</ul>
 			</div>
-			<div class="panel" ng-show="nav.isSelected(2)">
+			<!--<div class="panel" ng-show="nav.isSelected(2)">
 				<ul class="list-group" ng-controller="productController as store">
 					<li class="list-group-items" ng-repeat="product in store.products">
 						<h2>
@@ -38,20 +38,18 @@
 						<blockquote>{{product['Product description']}}</blockquote>
 						<label for="size">Select size:</label>
 						<select class="form-control" id="size">
-							<option ng-repeat="size in product.options.sizes" ng-model="cartAdd.size">{{size}}</option>
+							<option ng-repeat="size in product.options.sizes">{{size}}</option>
 						</select>
 						<label for="color">Select color:</label>
 						<select class="form-control" id="color">
-							<option ng-repeat="color in product.options.colors" ng-model="cartAdd.color">{{color}}</option>
+							<option ng-repeat="color in product.options.colors">{{color}}</option>
 						</select>
 						<label for="qty">Quantity:</label>
-						<input type="text" class="form-control" id="qty" ng-model="cartAdd.qty">
+						<input type="text" class="form-control" id="qty">
 					</li>
-					{{cartAdd.size}}
-					{{cartAdd.color}}
-					{{cartAdd.qty}}
 				</ul>
-			</div>
+			</div>--> 
+			<product-item ng-show="nav.isSelected(2)"></product-item>
 		</div>
 	</nav>
 	
