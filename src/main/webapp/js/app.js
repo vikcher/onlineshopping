@@ -46,7 +46,7 @@
 					
 				});
 				
-				this.addToCart = function($http, size, color, quantity){
+				this.addToCart = function(size, color, quantity){
 					$http({
 						method : 'POST',
 						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",

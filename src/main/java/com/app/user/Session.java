@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
 
-@Path("rest/sessions")
+@Path("/sessions")
 public class Session {
 
 	/**

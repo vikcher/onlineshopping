@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
 
-@Path("cart")
+@Path("/cart")
 public class Cart {
 	
 	

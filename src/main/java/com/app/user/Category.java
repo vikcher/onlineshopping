@@ -16,7 +16,7 @@ import org.json.simple.JSONObject;
 
 import com.app.dbconn.DbConn;
 
-@Path("rest/categories")
+@Path("/categories")
 public class Category {
 	
 	

@@ -31,7 +31,7 @@ import com.app.dbconn.DbConn;
  * @author vikcher
  *
  */
-@Path("rest/users")
+@Path("/users")
 public class User {
 	
 	
