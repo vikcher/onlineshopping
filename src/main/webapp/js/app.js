@@ -49,18 +49,12 @@
 				this.addToCart = function(id, size, color, quantity){
 					$http({
 						method : 'PUT',
-						url : 'https://vast-everglades-25484.herokuapp.com/rest/cart/'+id+'/',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart/"+id+"?color=" + encodeURIComponent(color)
+						       + "&size=" + encodeURIComponent(size) + "&quantity=" +encodeURIComponent(quantity),
 						headers : {
 							'Content-Type' : 'application/x-www-form-urlencoded',
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
-						},
-						transformRequest : function(obj) {
-							var str = [];
-							for (var p in obj)
-						        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-							return str.join("&");
-						},
-						data : {'size' : size , 'color' : color, 'quantity' : quantity}
+						}
 					}).then(function successCallBack(response){console.log(response)}, function errorCallBack(){});
 				};
 		    }],
