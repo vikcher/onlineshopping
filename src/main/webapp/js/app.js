@@ -54,7 +54,7 @@
 							'Content-Type' : 'application/x-www-form-urlencoded',
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						},
-						data : 'size='+size+'&color='+color+'&quantity='+quantity
+						data : 'size='+encodeURIComponent(size)+'&color='+encoreURIComponent(color)+'&quantity='+encodeURIComponent(quantity)
 					}).then(function successCallBack(response){console.log(response)}, function errorCallBack(){});
 				};
 		    }],
