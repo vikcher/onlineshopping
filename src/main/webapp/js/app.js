@@ -45,6 +45,18 @@
 				}, function errorCallBack(response) {
 					
 				});
+				
+				this.addToCart = function($http, size, color, quantity){
+					$http({
+						method : 'POST',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
+						headers : {
+							'Content-Type' : 'application/x-www-form-urlencoded',
+							'Authorization' : 'Bearer'
+						},
+						data : 'size='+size+'&color='+color+'&quantity'+quantity
+					}).then(function successCallBack(response){}, function errorCallBack(){});
+				};
 		    }],
 		    controllerAs : 'store'
 		};
