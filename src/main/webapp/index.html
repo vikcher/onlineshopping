@@ -8,8 +8,12 @@
 <body>
 	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
-	<p>
-		I am {{4+6}}
-	</p>
+	<ul class = "list-group" ng-controller="storeController as store">
+	    <li class = "list-group-items" ng-repeat="product in store.products">
+	    	<h1>{{product.name}}</h1>
+	    	<h2>{{product.price}}</h2>
+	    </li>  
+	</ul>
+	
 </body>
 </html>
