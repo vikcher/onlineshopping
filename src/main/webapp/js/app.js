@@ -5,10 +5,8 @@
 (function() {
 	var app = angular.module('shoppingcart', []);
 	
-	app.controller('storeController', ['$http', function($http) {
-		//this.products = [{name: 'a', price: 200}, {name : 'b', price : 500}];
+	app.controller('productController', ['$http', function($http) {
 		var store = this;
-		
 		store.products = [];
 		
 		$http({method : 'GET', url : "https://vast-everglades-25484.herokuapp.com/rest/products"}).then(function successCallback(response){
@@ -18,4 +16,16 @@
 			
 		});
 	}]);
+	
+	app.controller('navController'), function() {
+		this.tab = 1;
+		
+		this.selectTab = function(setTab) {
+			this.tab = tab;
+		};
+		
+		this.isSelected = function(checkTab) {
+			return this.tab === checkTab;
+		};
+	};
 })();

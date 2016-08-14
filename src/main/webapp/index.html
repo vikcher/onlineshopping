@@ -23,11 +23,11 @@
 				</button>
 				<a class="navbar-brand" href="#">Logo</a>
 			</div>
-			<div class="collapse navbar-collapse" id="myNavbar" ng-init="tab = 1">
+			<div class="collapse navbar-collapse" id="myNavbar" ng-controller="navController as nav">
 				<ul class="nav navbar-nav">
-					<li ng-class="{active: tab === 1}"><a href ng-click="tab = 1">Categories</a></li>
-					<li ng-class="{active: tab === 2}"><a href ng-click="tab = 2">Products</a></li>
-					<li ng-class="{active: tab === 3}"><a href ng-click="tab = 3">Deals</a></li>
+					<li ng-class="{active: nav.isSelected(1)}"><a href ng-click="nav.selectTab(1)">Categories</a></li>
+					<li ng-class="{active: nav.isSelected(2)}"><a href ng-click="nav.selectTab(2)">Products</a></li>
+					<li ng-class="{active: nav.isSelected(3)}"><a href ng-click="nav.selectTab(3)">Deals</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span>
@@ -41,7 +41,7 @@
 	
 	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
-	<div class=container" ng-show ="tab === 1">
+	<div class=container" ng-show ="nav.isSelected(2)">
 		<ul class="list-group" ng-controller="storeController as store">
 			<li class="list-group-items" ng-repeat="product in store.products">
 				<h1>{{product['Product name']}}</h1>
