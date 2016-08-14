@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.min.css"/>
 	<title>Insert title here</title>
 </head>
-<body>
+<body  ng-controller="navController as nav">
     <div class="jumbotron">
     	<div class="container text-center">
     		<h1>Online shopping</h1>
@@ -23,12 +23,13 @@
 				</button>
 				<a class="navbar-brand" href="#">Logo</a>
 			</div>
-			<div class="collapse navbar-collapse" id="myNavbar" ng-controller="navController as nav">
+			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
 					<li ng-class="{active: nav.isSelected(1)}"><a href ng-click="nav.selectTab(1)">Categories</a></li>
 					<li ng-class="{active: nav.isSelected(2)}"><a href ng-click="nav.selectTab(2)">Products</a></li>
 					<li ng-class="{active: nav.isSelected(3)}"><a href ng-click="nav.selectTab(3)">Deals</a></li>
 				</ul>
+				{{nav.tab}}
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="#"><span class="glyphicon glyphicon-user"></span>
 							Your Account</a></li>
