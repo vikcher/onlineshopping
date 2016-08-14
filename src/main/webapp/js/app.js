@@ -52,7 +52,7 @@
 						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
 						headers : {
 							'Content-Type' : 'application/x-www-form-urlencoded',
-							'Authorization' : 'Bearer'
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						},
 						data : 'size='+size+'&color='+color+'&quantity'+quantity
 					}).then(function successCallBack(response){}, function errorCallBack(){});
