@@ -184,14 +184,15 @@ public class Product {
 				newObj.put("Product name", rs.getString("product_name"));
 				newObj.put("Product description", rs.getString("product_description"));
 				newObj.put("Price", rs.getFloat("product_price"));
-				newObj.put("options", rs.getString("options"));
+				org.json.JSONObject options = new org.json.JSONObject(rs.getString("options"));
+				newObj.put("options", options);
 				newObj.put("File URL", rs.getString("img_url"));
 				newObj.put("Discount", getProductDiscount(rs.getInt("product_id")));
 				arr.add(newObj);
 				count++;
 			}
 			
-		} catch (URISyntaxException | SQLException e) {
+		} catch (URISyntaxException | SQLException | JSONException e) {
 	     	return Util.generateJSONString("Error", "800",  "An internal server error occured");
 		} finally {
 			try {
