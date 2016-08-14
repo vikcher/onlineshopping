@@ -46,16 +46,16 @@
 					
 				});
 				
-				this.addToCart = function(size, color, quantity){
+				this.addToCart = function(id, size, color, quantity){
 					$http({
 						method : 'POST',
-						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
+						url : 'https://vast-everglades-25484.herokuapp.com/rest/cart/'+id+'/',
 						headers : {
 							'Content-Type' : 'application/x-www-form-urlencoded',
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						},
 						data : 'size='+size+'&color='+color+'&quantity'+quantity
-					}).then(function successCallBack(response){}, function errorCallBack(){});
+					}).then(function successCallBack(response){console.log(response)}, function errorCallBack(){});
 				};
 		    }],
 		    controllerAs : 'store'
