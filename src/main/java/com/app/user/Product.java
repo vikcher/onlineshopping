@@ -206,7 +206,7 @@ public class Product {
 		ret.put("Type", "Success");
 		ret.put("Response code", "600");
 		ret.put("Number of products", count);
-		ret.put("Product list", arr);
+		ret.put("products", arr);
 		return ret.toJSONString();
 	}
 	
