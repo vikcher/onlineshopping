@@ -56,6 +56,7 @@
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
 					}).then(function successCallBack(response){console.log(response)}, function errorCallBack(){});
+					this.formAdd = {};
 				};
 		    }],
 		    controllerAs : 'store'
