@@ -48,7 +48,7 @@
 				
 				this.addToCart = function(id, size, color, quantity){
 					$http({
-						method : 'POST',
+						method : 'PUT',
 						url : 'https://vast-everglades-25484.herokuapp.com/rest/cart/'+id+'/',
 						headers : {
 							'Content-Type' : 'application/x-www-form-urlencoded',
