@@ -42,7 +42,7 @@
 	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 	<div class=container" ng-show ="nav.isSelected(2)">
-		<ul class="list-group" ng-controller="storeController as store">
+		<ul class="list-group" ng-controller="productController as store">
 			<li class="list-group-items" ng-repeat="product in store.products">
 				<h1>{{product['Product name']}}</h1>
 				<h2>{{product.Price}}</h2>

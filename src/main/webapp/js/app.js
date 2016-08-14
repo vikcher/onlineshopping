@@ -21,7 +21,7 @@
 		this.tab = 1;
 		
 		this.selectTab = function(setTab) {
-			this.tab = tab;
+			this.tab = setTab;
 		};
 		
 		this.isSelected = function(checkTab) {
