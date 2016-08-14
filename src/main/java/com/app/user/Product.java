@@ -28,7 +28,7 @@ import com.app.dbconn.DbConn;
  * @author vikcher
  *
  */
-@Path("/rest/products")
+@Path("/products")
 public class Product {
 	
 	/**
