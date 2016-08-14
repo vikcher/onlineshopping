@@ -36,6 +36,7 @@
 			restrict: 'E',
 		    templateUrl : "product-item.html",
 		    controller : ['$http', function($http) {
+		    	this.formAdd = {};
 		    	var store = this;
 				store.products = [];
 				
