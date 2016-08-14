@@ -22,9 +22,9 @@
 					<li ng-class="{active: nav.isSelected(3)}"><a href ng-click="nav.selectTab(3)">Deals</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#"><span class="glyphicon glyphicon-user"></span>
+					<li><a href ng-click="nav.selectTab(4)"><span class="glyphicon glyphicon-user"></span>
 							Your Account</a></li>
-					<li><a href="#"><span
+					<li><a href ng-click="nav.selectTab(5)"><span
 							class="glyphicon glyphicon-shopping-cart"></span> Cart </a></li>
 				</ul>
 			</div>
@@ -36,6 +36,10 @@
 							<em class="pull-right">{{product.Price | currency}}</em>
 						</h2>
 						<blockquote>{{product['Product description']}}</blockquote>
+						<label for="size">Select quantity:</label>
+						<select class="form-control" id="size">
+							<option ng-repeat="size in product.options.sizes">{{size}}</option>
+						</select>
 					</li>
 				</ul>
 			</div>
