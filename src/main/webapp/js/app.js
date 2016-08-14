@@ -13,7 +13,7 @@
 		
 		$http({method : 'GET', url : "https://vast-everglades-25484.herokuapp.com/rest/products"}).then(function successCallback(response){
 			store.products = response.products;
-			console.log(response.products);
+			console.log(response);
 		}, function errorCallBack(response) {
 			
 		});
