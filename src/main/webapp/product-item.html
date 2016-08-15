@@ -42,6 +42,7 @@
 							<h4>{{product.Price|currency}}</h4>
 						</div>
 						<div class="col-md-4 col-xs-9"> 
+							<label for="size">Select size:</label>
 							<select class="btn btn-mini" id="size">
 								<option ng-repeat="size in product.options.sizes">{{size}}</option>	
 							</select>
