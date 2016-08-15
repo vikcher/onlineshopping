@@ -41,9 +41,8 @@
 						<div class="col-md-6 text-right">
 							<h4>{{product.Price|currency}}</h4>
 						</div>
-						<div class="col-md-4 col-xs-9">
-							<label for="size">Select size:</label> 
-							<select class="form-control" id="size">
+						<div class="col-md-4 col-xs-9"> 
+							<select class="btn btn-mini" id="size">
 								<option ng-repeat="size in product.options.sizes">{{size}}</option>	
 							</select>
 						</div>
