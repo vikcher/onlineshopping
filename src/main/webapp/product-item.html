@@ -34,12 +34,12 @@
 			<div class="panel-body">
 				<div class="row" ng-repeat="product in store.products">
 					<div class="col-md-4 col-xs-12">
-						<h4><strong>{{product.name}}</strong></h4>
-						<h4><small>{{product.description}}</small></h4>
+						<h4><strong>{{product['Product name']}}</strong></h4>
+						<h4><small>{{product['Product description']}}</small></h4>
 					</div>
 					<div class="col-md-6 col-xs-12">
 						<div class="col-md-6 text-right">
-							<h4>{{product.price|currency}}</h4>
+							<h4>{{product.Price|currency}}</h4>
 						</div>
 					</div>
 				</div>
