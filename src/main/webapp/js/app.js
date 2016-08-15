@@ -36,7 +36,7 @@
 			restrict: 'E',
 		    templateUrl : "product-item.html",
 		    controller : ['$http', function($http) {
-		    	this.formAdd = {};
+		    	this.formAdd = [];
 		    	var store = this;
 				store.products = [];
 				
@@ -57,7 +57,7 @@
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
 					}).then(function successCallBack(response){console.log(response)}, function errorCallBack(){});
-					this.formAdd = {};
+					this.formAdd[id] = {};
 				};
 		    }],
 		    controllerAs : 'store'
