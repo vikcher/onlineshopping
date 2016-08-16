@@ -25,6 +25,8 @@
                 cart.promo_code_discount_percentage = 0.0;
                 cart.promo_code_discount = 0.0;
                 cart.grand_total = 0.0;
+                cart.states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
+                cart.shipping_state = "";
                 
 				this.populateCart = function() {
 					$http({
