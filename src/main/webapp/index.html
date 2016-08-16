@@ -25,7 +25,7 @@
 				id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li ng-class="{active : nav.isSelected(1)}"><a href ng-click="nav.selectTab(1)">Categories</a></li>
-					<li ng-class="{active : nav.isSelected(2)}"><a href ng-click="nav.selectTab(2)">Products</a></li>
+					<li ng-class="{active : nav.isSelected(2)}"><a href ng-click="nav.selectTab(2);store.getProductList()">Products</a></li>
 					<li ng-class="{active : nav.isSelected(3)}"><a href ng-click="nav.selectTab(3)">Deals</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">

@@ -12,12 +12,14 @@
 		    	var store = this;
 				store.products = [];
 				
-				$http({method : 'GET', url : "https://vast-everglades-25484.herokuapp.com/rest/products"}).then(function successCallback(response){
-					store.products = response.data.products;
-					console.log(response.data.products);
-				}, function errorCallBack(response) {
-					
-				});
+				this.getProductList = function () {
+					$http({method : 'GET', url : "https://vast-everglades-25484.herokuapp.com/rest/products"}).then(function successCallback(response){
+						store.products = response.data.products;
+						console.log(response.data.products);
+					}, function errorCallBack(response) {
+
+					});
+				};
 				
 				this.addToCart = function(id, size, color, quantity){
 					$http({
