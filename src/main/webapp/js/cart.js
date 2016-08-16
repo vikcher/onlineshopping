@@ -12,7 +12,10 @@
 			controller : ['$http', function($http) {
 				var cart = this;
 				cart.items = [];
-				
+                cart.total = 0.0;
+                cart.discount = 0.0;
+                cart.total_after_discount = 0.0;
+                
 				$http({
 					method : 'GET',
 					url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
@@ -21,6 +24,9 @@
 					}
 				}).then(function successCallBack(response){
 					cart.items = response.data['Items'];
+					cart.total = response.data['Total price before discount'];
+				    cart.discount = response.data['Total savings'];
+				    cart.total_after_discount = response.data['Total price after discount'];
 					console.log(cart.items);
 					console.log(response.data);
 				}, 
