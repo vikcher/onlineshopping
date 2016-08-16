@@ -12,26 +12,42 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<div class = "row" ng-repeat = "item in cart.items">
-						<div class = "col-md-4 col-xs-12">
-							<h4><strong>{{item['Product name']}}</strong></h4>
-							<h4><small>{{item['Product description']}}</small></h4>
-						</div>
-						<div class = "col-md-4 col-xs-12">
-							<h4><strong> Color : {{item['Color']}}</strong></h4>
-							<h4><strong> Color : {{item['Size']}}</strong></h4>
-						</div>
-						<div class = "col-md-4 col-xs-12">
-							<div class = "col-md-6 text-right">
-								<h4><strong>{{item['Product price per qty'] | currency}}</strong> x <strong>{{item['Quantity']}}</strong></h4>
+					<div class="container" ng-repeat = "item in cart.items">
+						<div class="row">
+							<div class="col-md-4 col-xs-12">
+								<h4>
+									<strong>{{item['Product name']}}</strong>
+								</h4>
+								<h4>
+									<small>{{item['Product description']}}</small>
+								</h4>
 							</div>
-							<div class = "col-md-4 col-xs-9">
-								<h4><strong>{{item['Product price'] | currency}}</strong></h4>
+							<div class="col-md-4 col-xs-12">
+								<h4>
+									<strong> Color : {{item['Color']}}</strong>
+								</h4>
+								<h4>
+									<strong> Color : {{item['Size']}}</strong>
+								</h4>
 							</div>
-							<div class = "col-md-2 col-xs-2" ng-show = "item['Discount'] != 0.0">
-								<h4 class = "text-success"> {{item['Discount']}} off </h4>
+							<div class="col-md-4 col-xs-12">
+								<div class="col-md-6 text-right">
+									<h4>
+										<strong>{{item['Product price per qty'] | currency}}</strong>
+										x <strong>{{item['Quantity']}}</strong>
+									</h4>
+								</div>
+								<div class="col-md-4 col-xs-9">
+									<h4>
+										<strong>{{item['Product price'] | currency}}</strong>
+									</h4>
+								</div>
+								<div class="col-md-2 col-xs-2" ng-show="item['Discount'] != 0.0">
+									<h4 class="text-success">{{item['Discount']}} off</h4>
+								</div>
 							</div>
 						</div>
+						<hr>
 					</div>
 				</div>
 				<div class="panel-footer">
