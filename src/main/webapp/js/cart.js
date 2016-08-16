@@ -15,6 +15,7 @@
                 cart.total = 0.0;
                 cart.discount = 0.0;
                 cart.total_after_discount = 0.0;
+                cart.state = 1;
                 
 				$http({
 					method : 'GET',
@@ -31,6 +32,14 @@
 					console.log(response.data);
 				}, 
 				function errorCallBack(){});
+				
+				this.setState = function(state) {
+					this.state = state;
+				};
+				
+				this.getState = function(state) {
+					return this.state;
+				}
 			}],
 			controllerAs : 'cart'
 		}
