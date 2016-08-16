@@ -137,27 +137,8 @@
 				</div>
 				<div class="panel-footer">
 					<div class="row">
-						<div class="col-md-9 col-xs-12 text-right">
-							<h4>
-								<strong>Total before discount : {{cart.total | currency}}</strong>
-							</h4>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-9 col-xs-12 text-right">
-							<h4 class = "text-success">
-								<strong> Total savings : {{cart.discount | currency}}</strong>
-							</h4>
-						</div>
-						<div class="col-md-3 col-xs-12">
-							<button class="btn btn-success btn-lg btn-block" ng-click="cart.setState(2)">Checkout</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-9 col-xs-12 text-right">
-							<h4>
-								<strong>Total after discount : {{cart.total_after_discount | currency}}</strong>
-							</h4>
+						<div class="col-md-3 text-right">
+							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount()">Review details</button>
 						</div>
 					</div>
 				</div>
