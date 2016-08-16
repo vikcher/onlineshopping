@@ -9,7 +9,7 @@
 		return {
 			restrict : 'E',
 			templateUrl : "cart-item.html",
-			controller : ['http', function($http) {
+			controller : ['$http', function($http) {
 				var cart = this;
 				cart.items = [];
 				
