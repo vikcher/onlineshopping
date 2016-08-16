@@ -14,6 +14,9 @@
 				<div class="panel-body">
 					<div class="container-fluid" ng-repeat = "item in cart.items">
 						<div class="row">
+						    <div class="col-md-2 col-xs-12">
+						    	<img class="img-responsive" src="assets/images/150x70.png">
+						    </div> 
 							<div class="col-md-4 col-xs-12">
 								<h4>
 									<strong>{{item['Product name']}}</strong>
@@ -22,12 +25,12 @@
 									<small>{{item['Product description']}}</small>
 								</h4>
 							</div>
-							<div class="col-md-4 col-xs-12">
+							<div class="col-md-2 col-xs-12">
 								<h4>
-									<strong> Color : {{item['Color']}}</strong>
+									 Color : {{item['Color']}}
 								</h4>
 								<h4>
-									<strong> Color : {{item['Size']}}</strong>
+									 Color : {{item['Size']}}
 								</h4>
 							</div>
 							<div class="col-md-4 col-xs-12">
