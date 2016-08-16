@@ -1,5 +1,5 @@
 <div class="container"> <!-- Beginning of container for shopping cart-->
-	<div class="row" ng-show = "cart.getState() == 1||cart.getState() == 2"> <!-- Div for the whole panel -->
+	<div class="row" ng-show = "cart.getState() == 1> <!-- Div for the whole panel -->
 		<div class = "col-md-12 col xs-12"> <!-- Column definition -->
 			<div class="panel panel-info"> <!-- Panel class specifiying blue color -->
 				<div class="panel-heading">
@@ -97,7 +97,7 @@
 								<h5>Enter shipping details</h5>
 							</div>
 							<div class="col-md-6">
-								<button class="btn btn-primary btn-sm pull-right">Edit cart</button>
+								<button class="btn btn-primary btn-sm pull-right" ng-click="cart.setState(1)">Edit cart</button>
 							</div>
 						</div>
 					</div>
@@ -126,6 +126,11 @@
 					<hr>
 					<div class="row">
 						<div class="col-md-6 col-xs-12">
+							<div class="form-group">
+								<label for="promoCode">Promo code:</label> <input
+									type = "text" class="form-control" id="promoCode"
+									placeholder="Enter promo code" ng-model = "cart.shipping_address">
+							</div>
 						</div>
 					</div>
 					<hr>
