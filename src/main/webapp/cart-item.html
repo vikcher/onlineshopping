@@ -17,9 +17,13 @@
 							<h4><strong>{{item['Product name']}}</strong></h4>
 							<h4><small>{{item['Product description']}}</small></h4>
 						</div>
-						<div class = "col-md-6 col-xs-12">
+						<div class = "col-md-4 col-xs-12">
+							<h4><strong> Color : {{item['Color']}}</strong></h4>
+							<h4><strong> Color : {{item['Size']}}</strong></h4>
+						</div>
+						<div class = "col-md-4 col-xs-12">
 							<div class = "col-md-6 text-right">
-								<h4><strong>{{item['Product price per qty'] | currency}}</strong> x <strong>{{item['Quantity']}}</strong> = </h4>
+								<h4><strong>{{item['Product price per qty'] | currency}}</strong> x <strong>{{item['Quantity']}}</strong></h4>
 							</div>
 							<div class = "col-md-4 col-xs-9">
 								<h4><strong>{{item['Product price'] | currency}}</strong></h4>

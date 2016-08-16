@@ -280,6 +280,7 @@ public class Cart {
 				newObject.put("Quantity", rs.getInt("quantity"));
 				newObject.put("Color", rs.getString("color"));
 				newObject.put("Image URL", rs.getString("img_url"));
+				newObject.put("Size", rs.getString("size"));
 				ret.setTotal_price(ret.getTotal_price() + (double)(rs.getDouble("product_price")*rs.getInt("quantity"))) ;
 				double discount = getTotalDiscount((double)(rs.getDouble("product_price")*rs.getInt("quantity")), rs.getInt("pid"), rs.getInt("cid"));
 				newObject.put("Discount", discount);
