@@ -3,7 +3,7 @@
  */
 
 (function() {
-	var app = angular.module('navigation', []);
+	var app = angular.module('navigation', ['cart']);
 	
 	app.controller('navController', function() {
 		this.tab = 1;
