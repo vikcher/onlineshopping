@@ -21,6 +21,8 @@
 					}
 				}).then(function successCallBack(response){
 					cart.items = response.data['Items'];
+					console.log(cart.items);
+					console.log(response.data);
 				}, 
 				function errorCallBack(){});
 			}],
