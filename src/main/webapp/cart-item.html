@@ -118,7 +118,7 @@
 							<div class="form-group">
 								<label for="shippingState">Shipping state:</label>
 								<select class="form-control" id="shippingState" ng-model = "cart.shipping_state">
-									<option class="form-control" value = "{{state}}" ng-repeat = "state in cart.states"/>
+									<option class="form-control" ng-repeat = "state in cart.states" value = "{{state}}">{{state}} </option>
 								</select>
 							</div>
 						</div>
