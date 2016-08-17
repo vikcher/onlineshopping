@@ -168,27 +168,30 @@
 				    <div class = "col-md-6 col-xs-12">
 				        <div class = "row">
 				        	<div class = "col-md-4 col-xs-12">
-				        		<strong> Item list :</strong>
+				        		<h4><strong> Item list :</strong></h4>
 				        	</div>
 				        </div>
 				        <div class = "container-fluid" ng-repeat = "item in cart.items">
 					    	<div class = "row">
 					    		<div class = "col-md-12 col-xs-12">
-					    			{{item['Product name']}}
+					    			<strong>{{item['Product name']}}</strong>
 					    		</div>	
 					    	</div>
 					    	<div class = "row">
-					    		<div class = "col-md-3 col-xs-12">
-					    			Size : {{item['Size']}}
+					    		<div class = "col-md-2 col-xs-12">
+					    			<strong>Size : {{item['Size']}}</strong>
 					    		</div>
-								<div class = "col-md-3 col-xs-12">
-					    			Color : {{item['Color']}}
+								<div class = "col-md-2 col-xs-12">
+					    			<strong>Color : {{item['Color']}}</strong>
 					    		</div>
-					    		<div class = "col-md-3 col-xs-12">
-					    			Qty : {{item['Quantity']}}
+					    		<div class = "col-md-2 col-xs-12">
+					    			<strong>Qty : {{item['Quantity']}}</strong>
 					    		</div>
-					    		<div class = "col-md-3 col-xs-12">
-					    			Price : {{item['Product price']}}
+					    		<div class = "col-md-2 col-xs-12">
+					    			<strong>Price : {{item['Product price']}}</strong>
+					    		</div>
+					    		<div class = "col-md-2 col-xs-12" ng-show="item['Discount'] != 0.0">
+					    			<strong class="text-success">Discount : {{item['Discount']}}</strong>
 					    		</div>					    		
 					    	</div> 
 				    	</div>
