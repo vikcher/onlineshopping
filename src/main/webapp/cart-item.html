@@ -165,29 +165,31 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total items in cart<strong> : {{cart.num_items}}</h4>
+				    <div class = "col-md-6 col-xs-12"> 
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+								<h4> <strong>Total items in cart<strong> : {{cart.num_items}}</h4>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Items will be shipped to <strong> : {{cart.shipping_address}}</h4>
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+								<h4> <strong> Items will be shipped to <strong> : {{cart.shipping_address}}</h4>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total price before discount <strong> : {{cart.total | currency}} </h4>
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+								<h4> <strong>Total price before discount <strong> : {{cart.total | currency}} </h4>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total savings <strong> : {{cart.discount | currency}}</h4>
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+								<h4> <strong>Total savings <strong> : {{cart.discount | currency}}</h4>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total price after discount <strong> : {{cart.total_after_discount|currency}}</h4>
+						<div class="row">
+							<div class="col-md-12 col-xs-12">
+								<h4> <strong>Total price after discount <strong> : {{cart.total_after_discount|currency}}</h4>
+							</div>
 						</div>
 					</div>
 					<div class="row" ng-show = "cart.promo_code_discount_percentage != 0.0">
@@ -195,6 +197,7 @@
 							<h4> <strong> Promo code discount percentage <strong> : {{cart.promo_code_discount_percentage| number:2}}%</h4>
 						</div>
 					</div>
+					<div class="col-md-6 col-xs-12">
 					<div class="row" ng-show = "cart.promo_code_discount_percentage != 0.0">
 						<div class="col-md-8 col-xs-12">
 							<h4> <strong> Promo code discount<strong> : {{cart.promo_code_discount|currency}}</h4>
@@ -219,6 +222,7 @@
 						<div class="col-md-8 col-xs-12">
 							<h4> <strong> Grand total <strong> : {{cart.grand_total | currency}}</h4>
 						</div>
+					</div>
 					</div>
 				</div>
 				<div class="panel-footer">
