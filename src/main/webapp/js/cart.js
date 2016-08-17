@@ -46,6 +46,25 @@
 					function errorCallBack(){});
 				};
 				
+				this.calculateFinalAmount = function() {
+					$http({
+						method : 'POST',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
+						headers : {
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
+						}
+					}).then(function successCallBack(response){
+						cart.items = response.data['Items'];
+						cart.total = response.data['Total price before discount'];
+					    cart.discount = response.data['Total savings'];
+					    cart.total_after_discount = response.data['Total price after discount'];
+						console.log(cart.items);
+						console.log(response.data);
+					}, 
+					function errorCallBack(){});
+					
+				}
+				
 				this.setState = function(state) {
 					this.state = state;
 				};
