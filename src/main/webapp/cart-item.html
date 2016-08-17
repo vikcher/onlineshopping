@@ -177,47 +177,47 @@
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total price before discount <strong> : <small>{{cart.total | currency}}</small></h4>
+							<h4> <strong>Total price before discount <strong> : {{cart.total | currency}} </h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total savings <strong> : <small>{{cart.discount | currency}}</small></h4>
+							<h4> <strong>Total savings <strong> : {{cart.discount | currency}}</h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong>Total price after discount <strong> : <small>{{cart.total_after_discount|currency}}</small></h4>
+							<h4> <strong>Total price after discount <strong> : {{cart.total_after_discount|currency}}</h4>
 						</div>
 					</div>
 					<div class="row" ng-show = "cart.promo_code_discount_percentage != 0.0">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Promo code discount percentage <strong> : <small>{{cart.promo_code_discount_percentage}}</small></h4>
+							<h4> <strong> Promo code discount percentage <strong> : {{cart.promo_code_discount_percentage| number:2}}%</h4>
 						</div>
 					</div>
 					<div class="row" ng-show = "cart.promo_code_discount_percentage != 0.0">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Promo code discount<strong> : <small>{{cart.promo_code_discount|currency}}</small></h4>
+							<h4> <strong> Promo code discount<strong> : {{cart.promo_code_discount|currency}}</h4>
 						</div>
 					</div>
 					<div class="row" ng-show = "cart.promo_code_discount_percentage != 0.0">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Total after promo code discount<strong> : <small>{{cart.total_after_promo_code_discount|currency}}</small></h4>
+							<h4> <strong> Total after promo code discount<strong> : {{cart.total_after_promo_code_discount|currency}}</h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Sales tax ({{cart.shipping_state}})<strong> : <small>{{cart.tax_percentage}}</small></h4>
+							<h4> <strong> Sales tax ({{cart.shipping_state}})<strong> : {{cart.tax_percentage|number:2}}%</h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Sales tax amount<strong> : <small>{{cart.sales_tax | currency}}</small></h4>
+							<h4> <strong> Sales tax amount<strong> : {{cart.sales_tax | currency}}</h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
-							<h4> <strong> Grand total <strong> : <small>{{cart.grand_total | currency}}</small></h4>
+							<h4> <strong> Grand total <strong> : {{cart.grand_total | currency}}</h4>
 						</div>
 					</div>
 				</div>

@@ -689,12 +689,12 @@ public class Cart {
 		ret.put("Total price before discount", cr.getTotal_price());
 		ret.put("Total savings", cr.getTotal_discount());
 		ret.put("Total price after discount", cr.getTotal_price() - cr.getTotal_discount());
-		ret.put("Promo code discount percentage", promo_code_discount_percentage + "%");
+		ret.put("Promo code discount percentage", promo_code_discount_percentage);
 		promo_code_discount = (cr.getTotal_price() - cr.getTotal_discount())*(promo_code_discount_percentage/100);
 		ret.put("Promo code discount", promo_code_discount);
 		after_promo_code_discount = cr.getTotal_price() - cr.getTotal_discount() - promo_code_discount;
 		ret.put("Total after promo code discount", after_promo_code_discount);
-		ret.put("Sales tax percentage", sales_tax_percentage + "%");
+		ret.put("Sales tax percentage", sales_tax_percentage);
 		sales_tax_amount = after_promo_code_discount*(sales_tax_percentage/100);
 		ret.put("Sales tax amount", sales_tax_amount);
 		ret.put("Total after sales tax", sales_tax_amount + after_promo_code_discount);
