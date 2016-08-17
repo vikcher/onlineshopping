@@ -87,16 +87,17 @@ Response codes
     - 800 : Internal system error
 - APIs needing authorization
   Some APIs need the user to be logged in. **When the user is created using POST /user (See API reference), the Response Header returns an Authentication token. This token should be added to the Request 'Authorization' header with the prefix 'Bearer'. For instance, if the token is '38sdagks7aoydyg2', the Authorization header should contain 'Bearer 38sdagks7aoydyg2'**. The list of APIs needing token-based authorization are:
-    - DELETE /user
-    - DELETE /sessions
-    - GET /cart
-    - PUT /cart
-    - POST /cart
+    - DELETE /rest/user
+    - DELETE /rest/sessions
+    - GET /rest/cart
+    - PUT /rest/cart
+    - POST /rest/cart
+    - DELETE /rest/cart
 
 API Reference
 ==============
 
-- USER Path : /users
+- USER Path : /rest/users
   --------------------
   - **POST** Used to register a new user
     - Input : 
@@ -130,7 +131,7 @@ API Reference
         - **800** - An internal server error occured
         - **600** - Successfully removed user account
 
-- SESSION (Path : /sessions)
+- SESSION (Path : /rest/sessions)
   --------------------------
   - **POST** Used for user login
     - Input : 
@@ -162,7 +163,7 @@ API Reference
       - **800** : Internal server error occured
       - **600** : User logged out successfully
 
-- PRODUCT - Path : /products
+- PRODUCT - Path : /rest/products
   --------------------------
   - **GET** Get a list of all products
     - Input : Optional - Query param *category_id*
@@ -265,7 +266,7 @@ API Reference
       - **800** : Internal server error occured
       - **600** : Success
       
-- CATEGORY - Path : /categories
+- CATEGORY - Path : /rest/categories
   -----------------------------
   - **GET** Get a list of all product categories
     - Input : None required
@@ -278,7 +279,7 @@ API Reference
         - Category description
         - Discount on category (if applicable)
     - Example :
-        - **GET /categories**
+        - **GET /rest/categories**
         - Response :
         ```json
           {
@@ -323,9 +324,9 @@ API Reference
       - **800** : Internal server error occured
       - **600** : Success
       
-- CART - Path : /cart
+- CART - Path : /rest/cart
   --------------------
-  - **PUT** (/cart/{productID}?size='size'&color='color'&quantity='quantity'
+  - **PUT** (/rest/cart/{productID}?size='size'&color='color'&quantity='quantity'
     - ** Requires user Authorization token in the request header**  
     - Used to add a new item to cart. If the same item is present in the cart (same color and size), the quantity is just updated.
     - Input : 
@@ -339,7 +340,7 @@ API Reference
       - Format : ***MediaType.APPLICATION_JSON*** 
       - Payload : JSON string containing the Response type, Response code and Message
     - Example :
-        **PUT /cart/1?productID=1&size=M&color=blue**
+        **PUT /rest/cart/1?productID=1&size=M&color=blue**
     - Response codes returned :
       - **702** : Color/size does not exist product / Product does not exist
       - **703** : Wrong format for parameter 
@@ -347,7 +348,7 @@ API Reference
       - **800** : Internal server error
       - **600** : Successfully added product to cart
   
-  - **DELETE** (/cart/{productID}?size='size'&color='color'&quantity='quantity'
+  - **DELETE** (/rest/cart/{productID}?size='size'&color='color'&quantity='quantity'
     - ** Requires user Authorization token in the request header**
     - Used to delete an item from cart. If the same item is present in the cart (same color and size), the quantity is just updated. If the specified delete quantity is greater than quantity present in cart, error is raised.
     - Input : 
@@ -361,7 +362,7 @@ API Reference
       - Format : ***MediaType.APPLICATION_JSON*** 
       - Payload : JSON string containing the Response type, Response code and Message
     - Example :
-        **DELETE /cart/1?productID=1&size=M&color=blue**
+        **DELETE /rest/cart/1?productID=1&size=M&color=blue**
     - Response codes returned :
       - **702** : Color/size does not exist product / Product does not exist
       - **703** : Given quantity is greater than available in cart (Invalid input)
@@ -370,7 +371,7 @@ API Reference
       - **600** : Successfully removed specified quantity of product from cart
       - **601** : Nothing to remove from cart (Not considered a failure)
   
-  - **DELETE** /cart
+  - **DELETE** /rest/cart
     - ** Requires user Authorization token in the request header**
     - Used to empty the cart.
     - Input : None required
@@ -384,7 +385,7 @@ API Reference
       - **600** : Successfully removed specified quantity of product from cart
   
 
-  - **GET** /cart
+  - **GET** /rest/cart
     - ** Requires user Authorization token in the request header **
     - Used to view cart of the logged in user.
     - Input : None required
@@ -402,7 +403,7 @@ API Reference
         - Image URL
         - Discount
       - Example :
-        - **GET /cart**
+        - **GET /rest/cart**
         - Response :
         ```json
           {
@@ -441,7 +442,7 @@ API Reference
         - **800** : Internal server error
         - **600** : Successfully viewed cart
         
-- **POST** /cart
+- **POST** /rest/cart
   - **Requires user Authentication token in request header** 
     - Used for user checkout. The cart items are removed and receipt is displayed to the user.
     - Input : 
@@ -464,7 +465,7 @@ API Reference
         - Image URL
         - Discount
       - Example :
-        - **POST /cart form parameters : username =  , password = *hidden* , firstname = Vikas, lastname = Cheruku , email = vikcher123@gmail.com**
+        - **POST /rest/cart form parameters : username =  , password = *hidden* , firstname = Vikas, lastname = Cheruku , email = vikcher123@gmail.com**
         - Response :
         ```json
           {
@@ -551,3 +552,6 @@ Promo codes for testing
 - 50OFF (50% off)
 - GET25OFF (25% off)
 - OLYMPICSGOUSA (10% off)
+
+
+
