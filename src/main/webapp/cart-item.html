@@ -104,9 +104,9 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-18 col-xs-12">
-							<div class="form-group">
-								<label for="shippingAddress">Shipping address:</label> <textarea
+						<div class="col-md-8 col-xs-12">
+							<div class="form-group">	
+							<label for="shippingAddress">Shipping address:</label> <textarea
 									 class="form-control" id="shippingAddress"
 									placeholder="Shipping address" rows="4" cols="50" ng-model = "cart.shipping_address" required> Enter shipping address</textarea>
 							</div>
@@ -138,7 +138,65 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-md-3 text-right">
-							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount()">Review details</button>
+							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount();cart.setState(3)">Review details</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Final review of order -->
+<div class="container"> <!-- Beginning of billing details-->
+	<div class="row" ng-show = "cart.getState() == 3"> <!-- Div for the whole panel -->
+		<div class = "col-md-12 col xs-12"> <!-- Column definition -->
+			<div class="panel panel-success"> <!-- Panel class specifiying blue color -->
+				<div class="panel-heading">
+					<div class="panel-title">
+						<div class="row">
+							<div class="col-md-6">
+								<h5>Enter shipping details</h5>
+							</div>
+							<div class="col-md-6">
+								<button class="btn btn-primary btn-sm pull-right" ng-click="cart.setState(2)">Back</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-8 col-xs-12">
+							<h4> <strong>Total items in cart<strong> : <small>{{cart.num_items}}</small></h4>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-6 col-xs-12">
+							<div class="form-group">
+								<label for="shippingState">Shipping state:</label>
+								<select class="form-control" id="shippingState" ng-model = "cart.shipping_state" required>
+									<option class="form-control" ng-repeat = "state in cart.states" value = "{{state}}">{{state}} </option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-md-6 col-xs-12">
+							<div class="form-group">
+								<label for="promoCode">Promo code:</label> <input
+									type = "text" class="form-control" id="promoCode"
+									placeholder="Enter promo code" ng-model = "cart.promo_code">
+							</div>
+						</div>
+					</div>
+					<hr>
+				</div>
+				<div class="panel-footer">
+					<div class="row">
+						<div class="col-md-3 text-right">
+							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount();cart.setState(3)">Review details</button>
 						</div>
 					</div>
 				</div>
