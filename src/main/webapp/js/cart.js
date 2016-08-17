@@ -14,6 +14,7 @@
 				cart.items = [];
                 cart.total = 0.0;
                 cart.discount = 0.0;
+                cart.num_items = 0;
                 cart.total_after_discount = 0.0;
                 cart.state = 1;
                 cart.shipping_address = "";
@@ -24,6 +25,7 @@
                 cart.total_num_items = 0;
                 cart.promo_code_discount_percentage = 0.0;
                 cart.promo_code_discount = 0.0;
+                cart.total_after_promo_code_discount = 0.0;
                 cart.grand_total = 0.0;
                 cart.states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
                 cart.shipping_state = "";
@@ -51,15 +53,24 @@
 						method : 'POST',
 						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
 						headers : {
-							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
-						}
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1',
+							'Content-Type' : 'application/x-www-form-urlencoded'
+						}, 
+						data : 'shipping_addr='+encodeURIComponent(cart.shipping_address)+'&state='+encodeURIComponent(cart.shipping_state)+'&promo_code='+cart.promo_code
 					}).then(function successCallBack(response){
 						cart.items = response.data['Items'];
+						cart.num_items = response.data['Total number of items'];
 						cart.total = response.data['Total price before discount'];
 					    cart.discount = response.data['Total savings'];
 					    cart.total_after_discount = response.data['Total price after discount'];
-						console.log(cart.items);
-						console.log(response.data);
+					    cart.promo_code_discount_percentage = response.data['Promo code discount percentage'];
+					    cart.promo_code_discount = response.data['Promo code discount'];
+					    cart.total_after_promo_code_discount = response.data['Total after promo code discount'];
+					    cart.tax_percentage = response.data['Sales tax percentage'];
+					    cart.sales_tax = response.data['Sales tax amount'];
+					    cart.grand_total = response.data['Total after sales tax'];
+						console.log(cart);
+						//console.log(response.data);
 					}, 
 					function errorCallBack(){});
 					

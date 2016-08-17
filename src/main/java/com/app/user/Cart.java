@@ -698,7 +698,7 @@ public class Cart {
 		sales_tax_amount = after_promo_code_discount*(sales_tax_percentage/100);
 		ret.put("Sales tax amount", sales_tax_amount);
 		ret.put("Total after sales tax", sales_tax_amount + after_promo_code_discount);
-		emptyCart(sc);
+		//emptyCart(sc);
 		return ret.toJSONString();
 	}
 	
