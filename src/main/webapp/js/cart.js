@@ -137,6 +137,7 @@
 				};
 				
 				this.goToNextStateIfValid = function(state) {
+					console.log ("Cart success is " + cart.success);
 					if (cart.success == 1) {
 						this.state = state;
 					}
