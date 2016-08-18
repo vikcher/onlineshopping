@@ -51,8 +51,8 @@
 										<strong>{{item['Product price'] | currency}}</strong>
 									</h4>
 								</div>
-								<div class="col-md-3 col-xs-2" ng-show="item['Discount'] != 0.0">
-									<h4 class="text-success">{{item['Discount'] | currency}} off</h4>
+								<div class="col-md-3 col-xs-2">
+									<h4 class="text-success" ng-show="item['Discount'] != 0.0">{{item['Discount'] | currency}} off</h4>
 								</div>
 								<div class="col-md-3 col-xs-2">
 									<button class="btn btn-danger btn-sm" ng-click="cart.deleteItem(item['Color'],item['Size'],item['Quantity'], item['Product ID'])">Delete</button>
