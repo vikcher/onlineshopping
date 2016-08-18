@@ -123,7 +123,7 @@
 						headers : {
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
-					}).then(function successCallBack(response){}, function errorCallBack(){});
+					}).then(function successCallBack(response){cart.populateCart();}, function errorCallBack(){});
 				};
 				
 				this.getValidity = function () {
