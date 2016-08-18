@@ -455,7 +455,7 @@ public class Cart {
 		ret.put("Type", "Successs");
 		ret.put("Response Code", "600");
 		ret.put("Message", "Your cart has been processed");		
-	    return Util.generateJSONString("Success", "600",  "Your cart is now empty");	
+	    return ret.toJSONString();	
 	}
 	
 	/**
