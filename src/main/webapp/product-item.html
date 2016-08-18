@@ -37,27 +37,28 @@
 						<h4><strong>{{product['Product name']}}</strong></h4>
 						<h4><small>{{product['Product description']}}</small></h4>
 					</div>
-					<div class="col-md-8 col-xs-12">
-						<div class="col-md-3 text-right">
-							<h4>{{product.Price|currency}}</h4>
-						</div>
-						<div class="col-md-3 col-xs-9"> 
-							<label for="size">Select size:</label>
-							<select class="btn btn-mini" id="size">
-								<option ng-repeat="size in product.options.sizes">{{size}}</option>	
-							</select>
-						</div>
-						<div class="col-md-3 col-xs-9"> 
-							<label for="size">Select color:</label>
-							<select class="btn btn-mini" id="size">
-								<option ng-repeat="color in product.options.colors">{{color}}</option>	
-							</select>
-						</div>
-						<div class="col-md-3 col-xs-9">
-							<label for="qty">Quantity:</label> 
-							<input type="text" class="form-control input-sm" id="qty">
-						</div>
+				
+					<div class="col-md-2 text-right">
+						<h4>{{product.Price|currency}}</h4>
 					</div>
+					<!--
+					<div class="col-md-2 col-xs-9"> 
+						<label for="size">Select size:</label>
+						<select class="btn btn-mini" id="size">
+							<option ng-repeat="size in product.options.sizes">{{size}}</option>	
+						</select>
+					</div>
+					<div class="col-md-2 col-xs-9"> 
+						<label for="size">Select color:</label>
+						<select class="btn btn-mini" id="size">
+							<option ng-repeat="color in product.options.colors">{{color}}</option>	
+						</select>
+					</div>
+					<div class="col-md-2 col-xs-9">
+						<label for="qty">Quantity:</label> 
+						<input type="text" class="form-control input-sm" id="qty">
+					</div>
+					-->
 				</div>
 			</div>
 		</div>
