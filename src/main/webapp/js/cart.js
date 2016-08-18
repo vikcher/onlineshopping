@@ -86,9 +86,9 @@
 						}
 					}).then(function successCallBack(response){
 						cart.confirmation_number = response.data.confirmation;
+						this.resetCart();
 					}, 
 					function errorCallBack(){});
-					resetCart();
 					
 				};
 				
