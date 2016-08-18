@@ -77,21 +77,6 @@
 					
 				}
 				
-				this.processOrder = function () {
-					$http({
-						method : 'DELETE',
-						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
-						headers : {
-							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
-						}
-					}).then(function successCallBack(response){
-						cart.confirmation_number = response.data.confirmation;
-						this.resetCart();
-					}, 
-					function errorCallBack(){});
-					
-				};
-				
 				this.resetCart = function() {
 					cart.total = 0.0;
 	                cart.discount = 0.0;
@@ -110,6 +95,21 @@
 	                cart.grand_total = 0.0;
 	                cart.shipping_state = "";
 	                cart.confirmation_number = "";
+				};
+				
+				this.processOrder = function () {
+					$http({
+						method : 'DELETE',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
+						headers : {
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
+						}
+					}).then(function successCallBack(response){
+						cart.confirmation_number = response.data.confirmation;
+						this.resetCart();
+					}, 
+					function errorCallBack(){});
+					
 				};
 				
 				this.setState = function(state) {
