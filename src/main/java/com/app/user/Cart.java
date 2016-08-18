@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -98,6 +99,17 @@ public class Cart {
 			if (conn != null) conn.close();
 		}
 	    return -1;	
+	}
+	
+	private String generateConfirmationNumber(long seed) {
+		Random random = new Random(seed);
+		StringBuilder confirmation = new StringBuilder();
+		for (int i = 0; i < 10; i++){
+			int digit = random.nextInt(9);
+			confirmation.append(digit);
+		}
+	    
+		return confirmation.toString();
 	}
 	
 	/**
@@ -381,7 +393,7 @@ public class Cart {
 	@DELETE
 	@Secured
 	@Produces("application/json")
-	public String emptyCart(@Context SecurityContext sc)
+	public String processCart(@Context SecurityContext sc)
 	{
 		UserPrincipal user = (UserPrincipal) sc.getUserPrincipal();
 		int user_id = user.getID();
@@ -415,6 +427,34 @@ public class Cart {
 				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			}
 		}
+		
+		String confirmationNumber = generateConfirmationNumber(System.currentTimeMillis());
+		try {
+			conn = DbConn.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.prepareStatement("INSERT into orders (conf, user_id) values (?,?)");
+			stmt.setString(1, confirmationNumber);
+			stmt.setInt(2, user_id);
+			stmt.executeUpdate();
+			conn.commit();
+		} catch (SQLException | URISyntaxException e) {
+			return Util.generateJSONString("Error", "800", "An internal server error occured ");
+		} finally {
+			try {
+				if (stmt != null) stmt.close();
+				conn.setAutoCommit(true);
+				if (conn != null) conn.close();
+			} catch (SQLException e)
+			{
+				return Util.generateJSONString("Error", "800", "An internal server error occured ");
+			}
+		}
+		
+		JSONObject ret = new JSONObject();
+		ret.put("confirmation", confirmationNumber);
+		ret.put("Type", "Successs");
+		ret.put("Response Code", "600");
+		ret.put("Message", "Your cart has been processed");		
 	    return Util.generateJSONString("Success", "600",  "Your cart is now empty");	
 	}
 	

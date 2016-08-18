@@ -76,6 +76,10 @@
 					
 				}
 				
+				this.processOrder = function () {
+					
+				};
+				
 				this.setState = function(state) {
 					this.state = state;
 				};
