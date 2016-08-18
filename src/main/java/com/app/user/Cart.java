@@ -452,7 +452,7 @@ public class Cart {
 		
 		JSONObject ret = new JSONObject();
 		ret.put("confirmation", confirmationNumber);
-		ret.put("Type", "Successs");
+		ret.put("Type", "Success");
 		ret.put("Response Code", "600");
 		ret.put("Message", "Your cart has been processed");		
 	    return ret.toJSONString();	

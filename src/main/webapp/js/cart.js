@@ -68,18 +68,23 @@
 						}, 
 						data : 'shipping_addr='+encodeURIComponent(cart.shipping_address)+'&state='+encodeURIComponent(cart.shipping_state)+'&promo_code='+cart.promo_code
 					}).then(function successCallBack(response){
-						cart.items = response.data['Items'];
-						cart.num_items = response.data['Total number of items'];
-						cart.total = response.data['Total price before discount'];
-					    cart.discount = response.data['Total savings'];
-					    cart.total_after_discount = response.data['Total price after discount'];
-					    cart.promo_code_discount_percentage = response.data['Promo code discount percentage'];
-					    cart.promo_code_discount = response.data['Promo code discount'];
-					    cart.total_after_promo_code_discount = response.data['Total after promo code discount'];
-					    cart.tax_percentage = response.data['Sales tax percentage'];
-					    cart.sales_tax = response.data['Sales tax amount'];
-					    cart.grand_total = response.data['Total after sales tax'];
-						console.log(cart);
+						if (response.data['Type'] == "Error") {
+							cart.success = 0;
+							cart.errorMessage = response.data['Message'];
+						} else {
+							cart.items = response.data['Items'];
+							cart.num_items = response.data['Total number of items'];
+							cart.total = response.data['Total price before discount'];
+						    cart.discount = response.data['Total savings'];
+						    cart.total_after_discount = response.data['Total price after discount'];
+						    cart.promo_code_discount_percentage = response.data['Promo code discount percentage'];
+						    cart.promo_code_discount = response.data['Promo code discount'];
+						    cart.total_after_promo_code_discount = response.data['Total after promo code discount'];
+						    cart.tax_percentage = response.data['Sales tax percentage'];
+						    cart.sales_tax = response.data['Sales tax amount'];
+						    cart.grand_total = response.data['Total after sales tax'];
+							console.log(cart);
+						}
 						//console.log(response.data);
 					}, 
 					function errorCallBack(){});
