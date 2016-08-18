@@ -83,6 +83,7 @@
 						    cart.tax_percentage = response.data['Sales tax percentage'];
 						    cart.sales_tax = response.data['Sales tax amount'];
 						    cart.grand_total = response.data['Total after sales tax'];
+						    cart.success = 1;
 							console.log(cart);
 						}
 						//console.log(response.data);
