@@ -273,3 +273,38 @@
 		</div>
 	</div>
 </div>
+
+<div class="container"> <!-- Beginning of billing details-->
+	<div class="row" ng-show = "cart.getState() == 4"> <!-- Div for the whole panel -->
+		<div class = "col-md-12 col xs-12"> <!-- Column definition -->
+			<div class="panel panel-success"> <!-- Panel class specifiying blue color -->
+				<div class="panel-heading">
+					<div class="panel-title">
+						<div class="row">
+							<div class="col-md-6">
+								<h5>Order confirmation</h5>
+							</div>
+							<div class="col-md-6">
+								<button class="btn btn-primary btn-sm pull-right" ng-click="cart.setState(2)">Back</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body">
+				    <div class = "col-md-6 col-xs-12">
+				    	<div class = "row">
+				    		<div class = "col-md-6 col-xs-12">
+				    			<strong class="text-success"> Your order has been confirmed !</strong>
+				    		</div>
+				    	</div>
+				    	<div class = "row">
+				    		<div class = "col-md-6 col-xs-12">
+				    			<strong> Confirmation number : {{cart.confirmation_number}}</strong>
+				    		</div>
+				    	</div>
+				    </div>					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

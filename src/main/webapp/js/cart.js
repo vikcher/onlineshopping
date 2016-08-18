@@ -29,6 +29,7 @@
                 cart.grand_total = 0.0;
                 cart.states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
                 cart.shipping_state = "";
+                cart.confirmation_number = "";
                 
 				this.populateCart = function() {
 					$http({
@@ -77,7 +78,16 @@
 				}
 				
 				this.processOrder = function () {
-					
+					$http({
+						method : 'DELETE',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart",
+						headers : {
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
+						}
+					}).then(function successCallBack(response){
+						cart.confirmation_number = response.data.confirmation;
+					}, 
+					function errorCallBack(){});
 				};
 				
 				this.setState = function(state) {
