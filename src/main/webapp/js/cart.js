@@ -74,6 +74,7 @@
 							cart.errorMessage = response.data['Message'];
 							//console.log(response.data);
 							cart.success = 0;
+							console.log("Returning 0");
 							return 0;
 						} else {
 							cart.items = response.data['Items'];
@@ -89,6 +90,7 @@
 						    cart.grand_total = response.data['Total after sales tax'];
 						    cart.success = 1;
 							console.log(cart);
+							console.log("Returning 1");
 							return 1;
 						}
 						console.log(response.data);
