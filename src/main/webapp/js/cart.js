@@ -121,7 +121,7 @@
 					return cart.success == 1;
 				};
 				
-				this.setState = function(valid, state) {
+				this.setState = function(state) {
 					this.state = state;
 				};
 				
