@@ -1,3 +1,4 @@
+
 <div class="container"> <!-- Beginning of container for shopping cart-->
 	<div class="row" ng-show = "cart.getState() == 1"> <!-- Div for the whole panel -->
 		<div class = "col-md-12 col xs-12"> <!-- Column definition -->
@@ -12,6 +13,9 @@
 					</div>
 				</div>
 				<div class="panel-body">
+				    <div class = "row" ng-show = "!cart.getValidity()">
+				    	<span class = "error">{{cart.errorMessage}}</span>
+				    </div>
 				    <div class = "row" ng-show = "!cart.items.length">
 				    	<div class = "col-md-6 col-xs-12">
 				    		<h4>Your cart is empty</h4>
@@ -73,7 +77,7 @@
 							</h4>
 						</div>
 						<div class="col-md-3 col-xs-12">
-							<button class="btn btn-success btn-lg btn-block" ng-click="cart.items.length && cart.setState(2)">Checkout</button>
+							<button class="btn btn-success btn-lg btn-block" ng-click="cart.getValidity() && cart.setState(2);cart.resetValidity()">Checkout</button>
 						</div>
 					</div>
 					<div class="row">

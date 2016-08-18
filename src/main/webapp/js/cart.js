@@ -30,6 +30,9 @@
                 cart.states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
                 cart.shipping_state = "";
                 cart.confirmation_number = "";
+                cart.success = 0;
+                cart.errorMessage = "";
+                cart.promo_code_valid = 0;
                 
 				this.populateCart = function() {
 					$http({
@@ -39,12 +42,18 @@
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
 					}).then(function successCallBack(response){
-						cart.items = response.data['Items'];
-						cart.total = response.data['Total price before discount'];
-					    cart.discount = response.data['Total savings'];
-					    cart.total_after_discount = response.data['Total price after discount'];
-						console.log(cart.items);
-						console.log(response.data);
+						if (response.data['Type'] == "Error") {
+							cart.success = 0;
+							cart.errorMessage = response.data['Message'];
+						} else {
+							cart.items = response.data['Items'];
+							cart.total = response.data['Total price before discount'];
+						    cart.discount = response.data['Total savings'];
+						    cart.total_after_discount = response.data['Total price after discount'];
+						    cart.success = 1;
+							console.log(cart.items);
+							console.log(response.data);
+						}
 					}, 
 					function errorCallBack(){});
 				};
@@ -90,7 +99,6 @@
 		                cart.discount = 0.0;
 		                cart.num_items = 0;
 		                cart.total_after_discount = 0.0;
-		                cart.state = 1;
 		                cart.shipping_address = "";
 		                cart.shipping_state = "";
 		                cart.promo_code = "";
@@ -106,6 +114,14 @@
 					}, 
 					function errorCallBack(){});
 					
+				};
+				
+				this.resetValidity = function() {
+					cart.success = 0;
+				};
+				
+				this.getValidity = function () {
+					return cart.success == 1;
 				};
 				
 				this.setState = function(state) {
