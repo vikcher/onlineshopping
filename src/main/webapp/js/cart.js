@@ -111,7 +111,6 @@
 						cart.total_after_promo_code_discount = 0.0;
 						cart.grand_total = 0.0;
 						cart.shipping_state = "";
-						cart.confirmation_number = "";
 					}, 
 					function errorCallBack(){});
 					
