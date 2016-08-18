@@ -143,9 +143,11 @@
 					return cart.success == 1;
 				};
 				
-				this.setState = function(state) {
-					this.state = state;
-					console.log(state + "" + this.state);
+				this.setState = function(valid, state) {
+					if (valid == 1) {
+						this.state = state;
+						console.log(state + "" + this.state);
+					}
 					
 				};
 				
