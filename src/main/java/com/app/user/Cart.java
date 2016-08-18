@@ -408,6 +408,7 @@ public class Cart {
 			return Util.generateJSONString("Error", "800" ,"An internal server error occured ");
 		}
 		
+		/*
 		try {
 			conn = DbConn.getConnection();
 			conn.setAutoCommit(false);
@@ -427,6 +428,7 @@ public class Cart {
 				return Util.generateJSONString("Error", "800", "An internal server error occured ");
 			}
 		}
+		*/
 		
 		String confirmationNumber = generateConfirmationNumber(System.currentTimeMillis());
 		try {
