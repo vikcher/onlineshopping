@@ -71,6 +71,7 @@
 						if (response.data['Type'] == "Error") {
 							cart.success = 0;
 							cart.errorMessage = response.data['Message'];
+							//console.log(response.data);
 						} else {
 							cart.items = response.data['Items'];
 							cart.num_items = response.data['Total number of items'];
@@ -86,7 +87,7 @@
 						    cart.success = 1;
 							console.log(cart);
 						}
-						//console.log(response.data);
+						console.log(response.data);
 					}, 
 					function errorCallBack(){});
 					
@@ -132,7 +133,14 @@
 				
 				this.setState = function(state) {
 					this.state = state;
+					
 				};
+				
+				this.goToNextStateIfValid = function(state) {
+					if (cart.success == 1) {
+						this.state = state;
+					}
+				}
 				
 				this.getState = function(state) {
 					return this.state;
