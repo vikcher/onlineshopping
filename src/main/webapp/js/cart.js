@@ -30,9 +30,9 @@
                 cart.states = ["AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"];
                 cart.shipping_state = "";
                 cart.confirmation_number = "";
-                cart.success = 0;
                 cart.errorMessage = "";
                 cart.promo_code_valid = 0;
+                cart.success = 0;
                 
 				this.populateCart = function() {
 					$http({
@@ -43,16 +43,18 @@
 						}
 					}).then(function successCallBack(response){
 						if (response.data['Type'] == "Error") {
-							cart.success = 0;
 							cart.errorMessage = response.data['Message'];
+							cart.success = 0;
+							return 0;
 						} else {
 							cart.items = response.data['Items'];
 							cart.total = response.data['Total price before discount'];
 						    cart.discount = response.data['Total savings'];
 						    cart.total_after_discount = response.data['Total price after discount'];
-						    cart.success = 1;
 							console.log(cart.items);
 							console.log(response.data);
+							cart.success = 1;
+							return 1;
 						}
 					}, 
 					function errorCallBack(){});
@@ -69,9 +71,10 @@
 						data : 'shipping_addr='+encodeURIComponent(cart.shipping_address)+'&state='+encodeURIComponent(cart.shipping_state)+'&promo_code='+cart.promo_code
 					}).then(function successCallBack(response){
 						if (response.data['Type'] == "Error") {
-							cart.success = 0;
 							cart.errorMessage = response.data['Message'];
 							//console.log(response.data);
+							cart.success = 0;
+							return 0;
 						} else {
 							cart.items = response.data['Items'];
 							cart.num_items = response.data['Total number of items'];
@@ -86,6 +89,7 @@
 						    cart.grand_total = response.data['Total after sales tax'];
 						    cart.success = 1;
 							console.log(cart);
+							return 1;
 						}
 						console.log(response.data);
 					}, 
@@ -101,23 +105,31 @@
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
 					}).then(function successCallBack(response){
-						cart.confirmation_number = response.data.confirmation;
-						cart.total = 0.0;
-		                cart.discount = 0.0;
-		                cart.num_items = 0;
-		                cart.total_after_discount = 0.0;
-		                cart.shipping_address = "";
-		                cart.shipping_state = "";
-		                cart.promo_code = "";
-		                cart.tax_percentage = 0.0;
-		                cart.sales_tax = 0.0;
-		                cart.total_num_items = 0;
-		                cart.promo_code_discount_percentage = 0.0;
-		                cart.promo_code_discount = 0.0;
-		                cart.total_after_promo_code_discount = 0.0;
-		                cart.grand_total = 0.0;
-		                cart.shipping_state = "";
-		                cart.confirmation_number = "";
+						if (response.data['Type'] == "Error") {
+							cart.success = 0;
+							cart.errorMessage = response.data['Message'];
+							return 0;
+						} else {
+							cart.confirmation_number = response.data.confirmation;
+							cart.total = 0.0;
+			                cart.discount = 0.0;
+			                cart.num_items = 0;
+			                cart.total_after_discount = 0.0;
+			                cart.shipping_address = "";
+			                cart.shipping_state = "";
+			                cart.promo_code = "";
+			                cart.tax_percentage = 0.0;
+			                cart.sales_tax = 0.0;
+			                cart.total_num_items = 0;
+			                cart.promo_code_discount_percentage = 0.0;
+			                cart.promo_code_discount = 0.0;
+			                cart.total_after_promo_code_discount = 0.0;
+			                cart.grand_total = 0.0;
+			                cart.shipping_state = "";
+			                cart.confirmation_number = "";
+			                cart.success = 1;
+			                return 1;
+						}
 					}, 
 					function errorCallBack(){});
 					
@@ -135,13 +147,6 @@
 					this.state = state;
 					
 				};
-				
-				this.goToNextStateIfValid = function(state) {
-					console.log ("Cart success is " + cart.success);
-					if (cart.success == 1) {
-						this.state = state;
-					}
-				}
 				
 				this.getState = function(state) {
 					return this.state;
