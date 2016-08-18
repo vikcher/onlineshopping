@@ -32,7 +32,6 @@
                 cart.confirmation_number = "";
                 cart.errorMessage = "";
                 cart.promo_code_valid = 0;
-                cart.success = 0;
                 
 				this.populateCart = function() {
 					$http({
@@ -44,8 +43,6 @@
 					}).then(function successCallBack(response){
 						if (response.data['Type'] == "Error") {
 							cart.errorMessage = response.data['Message'];
-							cart.success = 0;
-							return 0;
 						} else {
 							cart.items = response.data['Items'];
 							cart.total = response.data['Total price before discount'];
@@ -53,8 +50,6 @@
 						    cart.total_after_discount = response.data['Total price after discount'];
 							console.log(cart.items);
 							console.log(response.data);
-							cart.success = 1;
-							return 1;
 						}
 					}, 
 					function errorCallBack(){});
@@ -72,10 +67,6 @@
 					}).then(function successCallBack(response){
 						if (response.data['Type'] == "Error") {
 							cart.errorMessage = response.data['Message'];
-							//console.log(response.data);
-							cart.success = 0;
-							console.log("Returning 0");
-							return 0;
 						} else {
 							cart.items = response.data['Items'];
 							cart.num_items = response.data['Total number of items'];
@@ -88,10 +79,7 @@
 						    cart.tax_percentage = response.data['Sales tax percentage'];
 						    cart.sales_tax = response.data['Sales tax amount'];
 						    cart.grand_total = response.data['Total after sales tax'];
-						    cart.success = 1;
 							console.log(cart);
-							console.log("Returning 1");
-							return 1;
 						}
 						console.log(response.data);
 					}, 
@@ -107,38 +95,26 @@
 							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
 						}
 					}).then(function successCallBack(response){
-						if (response.data['Type'] == "Error") {
-							cart.success = 0;
-							cart.errorMessage = response.data['Message'];
-							return 0;
-						} else {
-							cart.confirmation_number = response.data.confirmation;
-							cart.total = 0.0;
-			                cart.discount = 0.0;
-			                cart.num_items = 0;
-			                cart.total_after_discount = 0.0;
-			                cart.shipping_address = "";
-			                cart.shipping_state = "";
-			                cart.promo_code = "";
-			                cart.tax_percentage = 0.0;
-			                cart.sales_tax = 0.0;
-			                cart.total_num_items = 0;
-			                cart.promo_code_discount_percentage = 0.0;
-			                cart.promo_code_discount = 0.0;
-			                cart.total_after_promo_code_discount = 0.0;
-			                cart.grand_total = 0.0;
-			                cart.shipping_state = "";
-			                cart.confirmation_number = "";
-			                cart.success = 1;
-			                return 1;
-						}
+						cart.confirmation_number = response.data.confirmation;
+						cart.total = 0.0;
+						cart.discount = 0.0;
+						cart.num_items = 0;
+						cart.total_after_discount = 0.0;
+						cart.shipping_address = "";
+						cart.shipping_state = "";
+						cart.promo_code = "";
+						cart.tax_percentage = 0.0;
+						cart.sales_tax = 0.0;
+						cart.total_num_items = 0;
+						cart.promo_code_discount_percentage = 0.0;
+						cart.promo_code_discount = 0.0;
+						cart.total_after_promo_code_discount = 0.0;
+						cart.grand_total = 0.0;
+						cart.shipping_state = "";
+						cart.confirmation_number = "";
 					}, 
 					function errorCallBack(){});
 					
-				};
-				
-				this.resetValidity = function() {
-					cart.success = 0;
 				};
 				
 				this.getValidity = function () {
@@ -146,11 +122,7 @@
 				};
 				
 				this.setState = function(valid, state) {
-					if (valid == 1) {
-						this.state = state;
-						console.log(state + "" + this.state);
-					}
-					
+					this.state = state;
 				};
 				
 				this.getState = function(state) {
