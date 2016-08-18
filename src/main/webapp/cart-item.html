@@ -150,7 +150,7 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-md-3 text-right">
-							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount() && cart.setState(3)">Review details</button>
+							<button class="btn btn-success btn-lg btn-block" ng-click="if(cart.calculateFinalAmount() == 1) {cart.setState(3);}">Review details</button>
 						</div>
 					</div>
 				</div>

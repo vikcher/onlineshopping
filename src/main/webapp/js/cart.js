@@ -145,6 +145,7 @@
 				
 				this.setState = function(state) {
 					this.state = state;
+					console.log(state + "" + this.state);
 					
 				};
 				
