@@ -88,6 +88,28 @@
 						cart.confirmation_number = response.data.confirmation;
 					}, 
 					function errorCallBack(){});
+					resetCart();
+					
+				};
+				
+				this.resetCart = function() {
+					cart.total = 0.0;
+	                cart.discount = 0.0;
+	                cart.num_items = 0;
+	                cart.total_after_discount = 0.0;
+	                cart.state = 1;
+	                cart.shipping_address = "";
+	                cart.shipping_state = "";
+	                cart.promo_code = "";
+	                cart.tax_percentage = 0.0;
+	                cart.sales_tax = 0.0;
+	                cart.total_num_items = 0;
+	                cart.promo_code_discount_percentage = 0.0;
+	                cart.promo_code_discount = 0.0;
+	                cart.total_after_promo_code_discount = 0.0;
+	                cart.grand_total = 0.0;
+	                cart.shipping_state = "";
+	                cart.confirmation_number = "";
 				};
 				
 				this.setState = function(state) {
