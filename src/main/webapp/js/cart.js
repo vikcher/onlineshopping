@@ -116,6 +116,16 @@
 					
 				};
 				
+				this.deleteItem = function(color,size,quantity, pid) {
+					$http({
+						method : 'DELETE',
+						url : "https://vast-everglades-25484.herokuapp.com/rest/cart/"+encodeURIComponent(pid)+"?color="+encodeURIComponent(color)+"&size="+encodeURIComponent(size)+"&quantity="+encodeURIComponent(quantity),
+						headers : {
+							'Authorization' : 'Bearer o1pjjkuo8vhmha5bip1898top1'
+						}
+					}).then(function successCallBack(response){}, function errorCallBack(){});
+				};
+				
 				this.getValidity = function () {
 					return cart.success == 1;
 				};
