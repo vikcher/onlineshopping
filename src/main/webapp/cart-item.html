@@ -159,6 +159,9 @@
 									placeholder="Shipping address" rows="4" cols="50" ng-model = "cart.shipping_address" required> Enter shipping address</textarea>
 							</div>
 						</div>
+						<div class="col-md-4 col-xs-12">
+							<p ng-show="shippingForm.shippingAddress.$invalid && !shippingForm.shippingAddress.$pristine" class="help-block">Shipping address is required</p>
+						</div>
 					</div>
 					<hr>
 					<div class="row">
@@ -169,6 +172,9 @@
 									<option class="form-control" ng-repeat = "state in cart.states" value = "{{state}}">{{state}} </option>
 								</select>
 							</div>
+						</div>
+						<div class="col-md-4 col-xs-12">
+							<p ng-show="shippingForm.shippingState.$invalid && !shippingForm.shippingState.$pristine" class="help-block">Shipping state is required</p>
 						</div>
 					</div>
 					<hr>
