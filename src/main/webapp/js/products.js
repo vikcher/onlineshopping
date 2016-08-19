@@ -1,9 +1,14 @@
 /**
- * 
+ * Module responsible for the 'Products' tab
+ * It has no dependencies
  */
 (function(){
 	var app = angular.module('products',[]);
 	
+	/*
+	 * Custom element directive to list all the items in the catalog
+	 * The controller has methods to get the product list and adding products to cart using the REST APIs
+	 */
 	app.directive('productItem', function() {
 		return {
 			restrict: 'E',

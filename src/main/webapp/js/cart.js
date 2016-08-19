@@ -1,22 +1,25 @@
 /**
- * 
+ * The controller responsible for the shopping cart
  */
 
 (function(){
 	var app = angular.module('cart', []);
 	
+	/*
+	 * Custom directive to render the cart and its different pages.
+	 */
 	app.directive('cartItem', function() {
 		return {
 			restrict : 'E',
 			templateUrl : "cart-item.html",
 			controller : ['$http', function($http) {
 				var cart = this;
-				cart.items = [];
+				cart.items = []; //List of items
                 cart.total = 0.0;
                 cart.discount = 0.0;
                 cart.num_items = 0;
                 cart.total_after_discount = 0.0;
-                cart.state = 1;
+                cart.state = 1; //The state of the checkout process 1- View cart 2 - Enter details 3 - Review cart 4 - Order confirmation
                 cart.shipping_address = "";
                 cart.shipping_state = "";
                 cart.promo_code = "";
@@ -33,6 +36,7 @@
                 cart.errorMessage = "";
                 cart.promo_code_valid = 0;
                 
+                /* Function sends a REST request to get cart items for the user */
 				this.populateCart = function() {
 					$http({
 						method : 'GET',
@@ -55,6 +59,7 @@
 					function errorCallBack(){});
 				};
 				
+				/* Function to calculate the final amount including taxes after user enters shipping details */
 				this.calculateFinalAmount = function() {
 					$http({
 						method : 'POST',
@@ -87,6 +92,7 @@
 					
 				}
 				
+				/* Process order, return a confirmation number*/
 				this.processOrder = function () {
 					$http({
 						method : 'DELETE',
@@ -116,6 +122,7 @@
 					
 				};
 				
+				/* Delete a specific item from the cart */
 				this.deleteItem = function(color,size,quantity, pid) {
 					$http({
 						method : 'DELETE',

@@ -9,8 +9,7 @@
 
 	<nav class="navbar navbar-default navbar-inverse" style="border-radius=0px !important;">
 		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
+			<!-- <div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
 					aria-expanded="false">
@@ -19,7 +18,7 @@
 						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">Brand</a>
-			</div>
+			</div>-->
 
 			<div class="collapse navbar-collapse"
 				id="bs-example-navbar-collapse-1">
@@ -32,12 +31,15 @@
 					<li ng-class="{active : nav.isSelected(4)}"><a href ng-click="nav.selectTab(4);cart.setState(1);cart.populateCart()">Cart</a></li>
 				</ul>
 			</div>
-			<!-- /.navbar-collapse -->
 		</div>
-		<!-- /.container-fluid -->
 	</nav>
 
+    <div class = "container" ng-show= "nav.isSelected(1)||nav.isSelected(3)">
+    	<h2 class = "text-warning"><strong>This page is still under construction</strong></h2>
+    </div>
+	<!-- Custom directive for product list -->
 	<product-item ng-show="nav.isSelected(2)"></product-item>
+	<!-- Custom directive for cart -->
 	<cart-item ng-show="nav.isSelected(4)"></cart-item>
 	
 	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
