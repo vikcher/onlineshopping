@@ -150,7 +150,7 @@
 					</div>
 				</div>
 				<div class="panel-body">
-					<form name="shippingForm" novalidate>
+					<form name="shippingForm" ng-submit="cart.calculateFinalAmount(); cart.setState(3);" novalidate>
 					<div class="row">
 						<div class="col-md-8 col-xs-12">
 							<div class="form-group">	
@@ -186,7 +186,8 @@
 				<div class="panel-footer">
 					<div class="row">
 						<div class="col-md-3 text-right">
-							<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount(); cart.setState(3);" ng-disable="shippingForm.$invalid">Review details</button>
+							<!--<button class="btn btn-success btn-lg btn-block" ng-click="cart.calculateFinalAmount(); cart.setState(3);" ng-disable="shippingForm.$invalid">Review details</button>-->
+							<button type="submit" class="btn btn-success btn-lg btn-block" ng-disable="shippingForm.$invalid">Review details</button>
 							</form>
 						</div>
 					</div>
